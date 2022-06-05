@@ -5,7 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "EVENT")
@@ -26,11 +29,30 @@ public class Event {
     @Column(name = "REG_YMD")
     private LocalDateTime regYmd;
 
+    @Column(name = "EVENT_START")
+    private LocalDate eventStart;
+
+    @Column(name = "EVENT_END")
+    private LocalDate eventEnd;
+
+    @OneToMany(mappedBy = "event")
+    private List<EventImage> eventImages = new ArrayList<>();
+
     @Builder
-    public Event(Long eventId, String title, String eventDetail, LocalDateTime regYmd) {
+    public Event(Long eventId, String title, String eventDetail, LocalDateTime regYmd, LocalDate eventStart, LocalDate eventEnd, List<EventImage> eventImages) {
         this.eventId = eventId;
         this.title = title;
         this.eventDetail = eventDetail;
         this.regYmd = regYmd;
+        this.eventStart = eventStart;
+        this.eventEnd = eventEnd;
+        this.eventImages = eventImages;
+    }
+
+    public void updateEvent(String title, String eventDetail, LocalDate eventStart, LocalDate eventEnd) {
+        this.title = title;
+        this.eventDetail = eventDetail;
+        this.eventStart = eventStart;
+        this.eventEnd = eventEnd;
     }
 }

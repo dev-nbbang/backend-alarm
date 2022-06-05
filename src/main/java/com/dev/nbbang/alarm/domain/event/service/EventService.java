@@ -2,6 +2,7 @@ package com.dev.nbbang.alarm.domain.event.service;
 
 import com.dev.nbbang.alarm.domain.event.dto.EventDTO;
 import com.dev.nbbang.alarm.domain.event.entity.Event;
+import com.dev.nbbang.alarm.domain.event.entity.EventImage;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface EventService {
     EventDTO searchEvent(Long eventId);
 
     // 이벤트 게시글 등록
-    EventDTO createEvent(Event event);
+    EventDTO createEvent(Event event, List<EventImage> eventImages);
 
     // 이벤트 게시글 수정
     EventDTO editEvent(Long eventId, Event event);
