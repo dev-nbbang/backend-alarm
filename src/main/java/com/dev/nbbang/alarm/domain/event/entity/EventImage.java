@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "EVENT_IMAGE")
@@ -32,9 +33,10 @@ public class EventImage {
 
     // 연관관계 편의 메서드
     public void mappingEvent(Event event) {
-        this.event = event;
-        if(!event.getEventImages().contains(this)) {
-            event.getEventImages().add(this);
+        if(this.event != null) {
+            event.getEventImages().remove(this);
         }
+        this.event = event;
+        event.getEventImages().add(this);
     }
 }

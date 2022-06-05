@@ -11,10 +11,10 @@ public interface EventService {
     EventDTO searchEvent(Long eventId);
 
     // 이벤트 게시글 등록
-    EventDTO createEvent(Event event, List<EventImage> eventImages);
+    EventDTO createEvent(Event event, List<String> imageUrls);
 
     // 이벤트 게시글 수정
-    EventDTO editEvent(Long eventId, Event event);
+    EventDTO editEvent(Long eventId, Event event, List<String> imageUrls);
 
     // 이벤트 게시글 삭제
     void deleteEvent(Long eventId);

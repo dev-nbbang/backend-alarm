@@ -1,5 +1,6 @@
 package com.dev.nbbang.alarm.domain.event.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,8 @@ import java.util.List;
 @Table(name = "EVENT")
 @NoArgsConstructor
 @Getter
+@Builder
+@AllArgsConstructor
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,18 +39,8 @@ public class Event {
     private LocalDate eventEnd;
 
     @OneToMany(mappedBy = "event")
+    @Builder.Default
     private List<EventImage> eventImages = new ArrayList<>();
-
-    @Builder
-    public Event(Long eventId, String title, String eventDetail, LocalDateTime regYmd, LocalDate eventStart, LocalDate eventEnd, List<EventImage> eventImages) {
-        this.eventId = eventId;
-        this.title = title;
-        this.eventDetail = eventDetail;
-        this.regYmd = regYmd;
-        this.eventStart = eventStart;
-        this.eventEnd = eventEnd;
-        this.eventImages = eventImages;
-    }
 
     public void updateEvent(String title, String eventDetail, LocalDate eventStart, LocalDate eventEnd) {
         this.title = title;

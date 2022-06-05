@@ -1,6 +1,7 @@
 package com.dev.nbbang.alarm.domain.event.service;
 
 import com.dev.nbbang.alarm.domain.event.dto.EventDTO;
+import com.dev.nbbang.alarm.domain.event.dto.EventImageDTO;
 import com.dev.nbbang.alarm.domain.event.entity.Event;
 import com.dev.nbbang.alarm.domain.event.entity.EventImage;
 import com.dev.nbbang.alarm.domain.event.exception.FailDeleteEventImagesException;
@@ -48,14 +49,14 @@ public class EventServiceImpl implements EventService {
      */
     @Transactional
     @Override
-    public EventDTO createEvent(Event event, List<EventImage> eventImages) {
+    public EventDTO createEvent(Event event, List<String> imageUrls) {
         // 1. 이벤트 저장
         Event savedEvent = Optional.of(eventRepository.save(event))
                 .orElseThrow(() -> new NoCreateEventException("이벤트 생성에 실패했습니다.", NbbangException.NOT_CREATE_EVENT));
 
         // 2. 이벤트 이미지 저장
-        if(eventImages.size() > 0) {
-            List<EventImage> savedEventImages = eventImageRepository.saveAll(eventImages);
+        if(imageUrls.size() > 0) {
+            List<EventImage> savedEventImages = eventImageRepository.saveAll(EventImageDTO.toEntityList(imageUrls, savedEvent));
 
             // 양방향 매핑
             for (EventImage eventImage : savedEventImages) {
@@ -75,7 +76,7 @@ public class EventServiceImpl implements EventService {
      */
     @Transactional
     @Override
-    public EventDTO editEvent(Long eventId, Event event) {
+    public EventDTO editEvent(Long eventId, Event event, List<String> imageUrls) {
         // 1. 이벤트를 찾는다.
         Event findEvent = Optional.ofNullable(eventRepository.findByEventId(eventId))
                 .orElseThrow(() -> new NoSuchEventException("등록되지 않은 이벤트입니다.", NbbangException.NOT_FOUND_EVENT));
@@ -84,11 +85,12 @@ public class EventServiceImpl implements EventService {
         findEvent.updateEvent(event.getTitle(), event.getEventDetail(), event.getEventStart(), event.getEventEnd());
 
         // 3. 수정한 이미지가 있는 경우
-        if(event.getEventImages().size() > 0) {
+        if(imageUrls.size() > 0) {
+            // 이미지 전체 삭제 후 새로 추가
             eventImageRepository.deleteAllByEvent(findEvent);
             findEvent.getEventImages().clear();
 
-            List<EventImage> savedEventImages = eventImageRepository.saveAll(event.getEventImages());
+            List<EventImage> savedEventImages = eventImageRepository.saveAll(EventImageDTO.toEntityList(imageUrls, findEvent));
             for (EventImage savedEventImage : savedEventImages) {
                 savedEventImage.mappingEvent(findEvent);
             }

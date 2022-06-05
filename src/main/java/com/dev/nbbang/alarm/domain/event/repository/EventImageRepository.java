@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface EventImageRepository extends JpaRepository<EventImage, Long> {
     // 이미지 저장
-    List<EventImage> saveAll(List<EventImage> eventImages);
+//    List<EventImage> saveAll(List<EventImage> eventImage);
 
     // 이미지 전체 삭제
     void deleteAllByEvent(Event event);
