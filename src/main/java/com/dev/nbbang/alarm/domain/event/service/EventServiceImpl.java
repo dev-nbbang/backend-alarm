@@ -112,18 +112,18 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new NoSuchEventException("등록되지 않은 이벤트입니다.", NbbangException.NOT_FOUND_EVENT));
 
         // 2. 이미지 삭제
-        eventImageRepository.deleteAllByEvent(findEvent);
+//        eventImageRepository.deleteAllByEvent(findEvent);
 
-        // 3. 이미지 삭제 확인
-        Optional.ofNullable(eventImageRepository.findAllByEvent(findEvent))
-                .ifPresent(
-                        exception -> {
-                            throw new FailDeleteEventImagesException("이벤트 이미지 삭제에 실패했습니다.", NbbangException.FAIL_DELETE_IMAGES);
-                        }
-                );
-
-        // 4. 이벤트 삭제
+        // 4. 이벤트 삭제 (cascade)
         eventRepository.deleteByEventId(eventId);
+
+//        // 3. 이미지 삭제 확인 (이미지 삭제 레포지토로 가야할듯)
+//        Optional.ofNullable(eventImageRepository.findAllByEvent(findEvent))
+//                .ifPresent(
+//                        exception -> {
+//                            throw new FailDeleteEventImagesException("이벤트 이미지 삭제에 실패했습니다.", NbbangException.FAIL_DELETE_IMAGES);
+//                        }
+//                );
     }
 
     /**
@@ -136,7 +136,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventDTO> searchEventList(Long eventId, int size) {
         // 1. 이벤트 리스트 조회
-        Slice<Event> findEvents = eventRepository.findEventByEventIdLessThanOrderByEventId(eventId, PageRequest.of(0, size));
+        Slice<Event> findEvents = eventRepository.findEventByEventIdLessThanOrderByEventIdDesc(eventId, PageRequest.of(0, size));
         if(findEvents.getSize() == 0) {
             throw new NoSuchEventException("더 이상 조회할 이벤트가 없습니다.", NbbangException.NOT_FOUND_EVENT);
         }

@@ -74,7 +74,7 @@ class EventRepositoryTest {
         eventRepository.save(testEventBuilder());
 
         // when
-        Slice<Event> findEventList = eventRepository.findEventByEventIdLessThanOrderByEventId(10000L, PageRequest.of(0, 2));
+        Slice<Event> findEventList = eventRepository.findEventByEventIdLessThanOrderByEventIdDesc(10000L, PageRequest.of(0, 2));
 
         // then
         assertThat(findEventList.getSize()).isEqualTo(2);

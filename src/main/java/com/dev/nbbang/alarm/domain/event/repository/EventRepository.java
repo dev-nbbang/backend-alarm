@@ -16,5 +16,5 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     void deleteByEventId(Long eventId);
 
-    Slice<Event> findEventByEventIdLessThanOrderByEventId(Long eventId, Pageable pageable);
+    Slice<Event> findEventByEventIdLessThanOrderByEventIdDesc(Long eventId, Pageable pageable);
 }

@@ -38,7 +38,7 @@ public class Event {
     @Column(name = "EVENT_END")
     private LocalDate eventEnd;
 
-    @OneToMany(mappedBy = "event")
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<EventImage> eventImages = new ArrayList<>();
 
