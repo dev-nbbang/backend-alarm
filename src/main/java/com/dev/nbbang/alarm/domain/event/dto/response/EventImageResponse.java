@@ -11,24 +11,24 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class EventImageCreateResponse {
+public class EventImageResponse {
     private Long imageId;
     private Long eventId;
     private String imageUrl;
 
     @Builder
-    public EventImageCreateResponse(Long imageId, Long eventId, String imageUrl) {
+    public EventImageResponse(Long imageId, Long eventId, String imageUrl) {
         this.imageId = imageId;
         this.eventId = eventId;
         this.imageUrl = imageUrl;
     }
 
     // DTO -> Response
-    public static List<EventImageCreateResponse> dtoToResponse(List<EventImageDTO> eventImages) {
-        List<EventImageCreateResponse> eventImageList = new ArrayList<>();
+    public static List<EventImageResponse> dtoToResponse(List<EventImageDTO> eventImages) {
+        List<EventImageResponse> eventImageList = new ArrayList<>();
         for (EventImageDTO eventImage : eventImages) {
             eventImageList.add(
-                    EventImageCreateResponse.builder()
+                    EventImageResponse.builder()
                             .imageId(eventImage.getImageId())
                             .imageUrl(eventImage.getImageUrl())
                             .eventId(eventImage.getEvent().getEventId())
@@ -38,11 +38,11 @@ public class EventImageCreateResponse {
     }
 
     // Entity -> Response
-    public static List<EventImageCreateResponse> entityToResponse(List<EventImage> eventImages) {
-        List<EventImageCreateResponse> eventImageList = new ArrayList<>();
+    public static List<EventImageResponse> entityToResponse(List<EventImage> eventImages) {
+        List<EventImageResponse> eventImageList = new ArrayList<>();
         for (EventImage eventImage : eventImages) {
             eventImageList.add(
-                    EventImageCreateResponse.builder()
+                    EventImageResponse.builder()
                             .imageId(eventImage.getImageId())
                             .imageUrl(eventImage.getImageUrl())
                             .eventId(eventImage.getEvent().getEventId())

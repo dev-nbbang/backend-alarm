@@ -10,6 +10,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 @Slf4j
 public class NbbangExceptionHandler {
+    @ExceptionHandler(GrantAccessDeniedException.class)
+    public ResponseEntity<CommonResponse> handleGrantException(GrantAccessDeniedException e) {
+        log.warn("Nbbang Exception Code : " + e.getErrorCode());
+        log.warn("Nbbang Exception message : " + e.getMessage());
+
+        return ResponseEntity.status(e.getHttpStatus()).body(CommonResponse.response(false, e.getMessage()));
+    }
+
     @ExceptionHandler(NbbangCommonException.class)
     public ResponseEntity<CommonResponse> handleBaseException(NbbangCommonException e) {
         log.warn("Nbbang Exception Code : " + e.getErrorCode());

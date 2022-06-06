@@ -3,7 +3,8 @@ package com.dev.nbbang.alarm.global.exception;
 public enum NbbangException {
     NOT_FOUND_EVENT("BE001", "Doesn't Find Event"),
     NOT_CREATE_EVENT("BE002", "Doesn't Create Event"),
-    FAIL_DELETE_IMAGES("BE003", "Fail To Delete Images");
+    FAIL_DELETE_IMAGES("BE003", "Fail To Delete Images"),
+    ACCESS_DENIED("BE400","Access Denied"),;
 
 
 
