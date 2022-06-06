@@ -34,4 +34,10 @@ public class Notice {
 
     @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<NoticeImage> noticeImages = new ArrayList<>();
+
+    // 공지사항 업데이트
+    public void updateNotice(String title, String noticeDetail) {
+        this.title = title;
+        this.noticeDetail = noticeDetail;
+    }
 }

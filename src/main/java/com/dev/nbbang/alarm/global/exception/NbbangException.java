@@ -4,7 +4,10 @@ public enum NbbangException {
     NOT_FOUND_EVENT("BE001", "Doesn't Find Event"),
     NOT_CREATE_EVENT("BE002", "Doesn't Create Event"),
     FAIL_DELETE_IMAGES("BE003", "Fail To Delete Images"),
-    ACCESS_DENIED("BE400","Access Denied"),;
+    NOT_CREATE_NOTICE("BE101", "Doesn't Create Notice"),
+    NOT_FOUND_NOTICE("BE102", "Doesn't Find Notice"),
+    NOT_CREATE_IMAGE("BE400", "Doesn't Create Image"),
+    ACCESS_DENIED("BE401","Access Denied"),;
 
 
 
