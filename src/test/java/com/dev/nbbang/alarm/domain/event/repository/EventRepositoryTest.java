@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 
 import java.awt.print.Pageable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.*;
@@ -87,6 +88,9 @@ class EventRepositoryTest {
                 .title("title")
                 .eventDetail("eventDetail")
                 .regYmd(LocalDateTime.now())
+                .eventStart(LocalDate.now())
+                .eventEnd(LocalDate.now().plusWeeks(1))
                 .build();
     }
+
 }

@@ -124,13 +124,13 @@ class EventServiceTest {
     void 이벤트_삭제_성공() {
         // given
         given(eventRepository.findByEventId(anyLong())).willReturn(allEventBuilder());
-        given(eventImageRepository.findAllByEvent(any())).willReturn(null);
+//        given(eventImageRepository.findAllByEvent(any())).willReturn(null);
 
         // when
         eventService.deleteEvent(1L);
 
         // then
-        verify(eventImageRepository, times(1)).deleteAllByEvent(any());
+//        verify(eventImageRepository, times(1)).deleteAllByEvent(any());
         verify(eventRepository, times(1)).deleteByEventId(anyLong());
     }
 
