@@ -1,8 +1,10 @@
 package com.dev.nbbang.alarm.domain.notice.service;
 
 import com.dev.nbbang.alarm.domain.notice.entity.Notice;
+import com.dev.nbbang.alarm.domain.notice.entity.NoticeImage;
 import com.dev.nbbang.alarm.domain.notice.repository.NoticeImageRepository;
 import com.dev.nbbang.alarm.domain.notice.repository.NoticeRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,14 +28,17 @@ class NoticeServiceImplTest {
     private NoticeServiceImplTest noticeService;
 
     @Test
-    void createNotice() {
+    @DisplayName("공지 서비스 : 공지 생성 성공")
+    void 공지_생성_성공() {
     }
 
     @Test
-    void searchNotice() {
+    @DisplayName("공지 서비스 : 공지 조회 성공")
+    void 공지_조회_성공() {
     }
 
     @Test
+    @DisplayName("공지 서비스 : ")
     void searchNoticeList() {
     }
 
@@ -51,6 +56,13 @@ class NoticeServiceImplTest {
                 .title("title")
                 .noticeDetail("Detail")
                 .regYmd(LocalDateTime.now())
+                .build();
+    }
+
+    private NoticeImage testImage(Long imageId, String imageUrl) {
+        return NoticeImage.builder()
+                .imageId(imageId)
+                .imageUrl(imageUrl)
                 .build();
     }
 }
