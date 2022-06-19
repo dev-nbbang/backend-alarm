@@ -102,9 +102,10 @@ public class NoticeServiceImpl implements NoticeService {
 
         // 3. 공지사항 이미지 삭제 후 저장
         if (imageUrls.size() > 0) {
-            List<NoticeImage> savedNoticeImages = noticeImageRepository.saveAll(NoticeImageDTO.toEntityList(imageUrls, findNotice));
+            noticeImageRepository.deleteAllByNotice(findNotice);
             findNotice.getNoticeImages().clear();
 
+            List<NoticeImage> savedNoticeImages = noticeImageRepository.saveAll(NoticeImageDTO.toEntityList(imageUrls, findNotice));
             if (imageUrls.size() != savedNoticeImages.size())
                 throw new NoCreateImageException("공지사항 이미지 저장에 실패했습니다.", NbbangException.NOT_CREATE_IMAGE);
 

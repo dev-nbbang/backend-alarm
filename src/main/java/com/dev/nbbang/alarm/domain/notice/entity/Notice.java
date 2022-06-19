@@ -33,6 +33,7 @@ public class Notice {
     private LocalDateTime regYmd;
 
     @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<NoticeImage> noticeImages = new ArrayList<>();
 
     // 공지사항 업데이트
