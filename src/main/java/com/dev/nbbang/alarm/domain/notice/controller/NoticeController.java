@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping(name = "/notice")
+@RequestMapping(value = "/notice")
 public class NoticeController {
     private final NoticeService noticeService;
 
@@ -58,7 +58,7 @@ public class NoticeController {
         List<NoticeDTO> findNoticeList = noticeService.searchNoticeList(noticeId, size);
         String message = "공지사항 리스트 조회에 성공했습니다.";
 
-        if (findNoticeList.isEmpty()) message = "더 이상 조회할 공지사항이 없습니다.";
+        if (findNoticeList.size() < size) message = "더 이상 조회할 공지사항이 없습니다.";
 
         return ResponseEntity.ok(CommonSuccessResponse.response(true, NoticeListResponse.createList(findNoticeList), message));
     }
