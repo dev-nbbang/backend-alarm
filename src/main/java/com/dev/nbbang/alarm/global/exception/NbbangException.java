@@ -6,6 +6,7 @@ public enum NbbangException {
     FAIL_DELETE_IMAGES("BE003", "Fail To Delete Images"),
     NOT_CREATE_NOTICE("BE101", "Doesn't Create Notice"),
     NOT_FOUND_NOTICE("BE102", "Doesn't Find Notice"),
+    NOT_FOUND_NOTIFY("BE201", "Doesn't Find Notify"),
     NOT_CREATE_IMAGE("BE400", "Doesn't Create Image"),
     ACCESS_DENIED("BE401","Access Denied"),;
 

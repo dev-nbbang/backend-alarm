@@ -39,4 +39,7 @@ public interface NotifyRepository extends JpaRepository<Notify, Long> {
 
     // 알림 메세지 저장
     Notify save(Notify notify);
+
+    // 특정 알림 조회
+    Notify findByNotifyId(Long notifyId);
 }
