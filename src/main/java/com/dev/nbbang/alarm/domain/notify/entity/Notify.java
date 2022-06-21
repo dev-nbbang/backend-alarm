@@ -33,13 +33,15 @@ public class Notify {
     private String readYn;
 
     @Column(name = "NOTIFY_TYPE")
-    private String notifyType;
+    @Enumerated(EnumType.STRING)
+    private NotifyType notifyType;
 
     @Column(name = "NOTIFY_TYPE_ID")
-    private String notifyTypeId;
+    private Long notifyTypeId;
 
     @Builder
-    public Notify(Long notifyId, String notifySender, String notifyReceiver, String notifyDetail, LocalDateTime notifyYmd, String readYn, String notifyType, String notifyTypeId) {
+
+    public Notify(Long notifyId, String notifySender, String notifyReceiver, String notifyDetail, LocalDateTime notifyYmd, String readYn, NotifyType notifyType, Long notifyTypeId) {
         this.notifyId = notifyId;
         this.notifySender = notifySender;
         this.notifyReceiver = notifyReceiver;
