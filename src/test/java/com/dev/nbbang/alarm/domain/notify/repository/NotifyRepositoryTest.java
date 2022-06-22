@@ -71,7 +71,8 @@ class NotifyRepositoryTest {
 
 
         // then
-        assertThat(notifyRepository.findNotifies("receiver", PageRequest.of(0, 2)).getSize()).isEqualTo(0);
+        assertThat(notifyRepository.findByNotifyId(savedNotifies.get(0).getNotifyId())).isNull();
+        assertThat(notifyRepository.findByNotifyId(savedNotifies.get(1).getNotifyId())).isNull();
     }
 
     @Test
@@ -163,6 +164,22 @@ class NotifyRepositoryTest {
         assertThat(findNotify.get().getNotifyReceiver()).isEqualTo(savedNotify.getNotifyReceiver());
         assertThat(findNotify.get().getNotifyDetail()).isEqualTo(savedNotify.getNotifyDetail());
         assertThat(findNotify.get().getNotifyType()).isEqualTo(savedNotify.getNotifyType());
+    }
+
+    @Test
+    @DisplayName("알림 레포지토리 : 특정 알림 조회")
+    void 특정_알림_조회() {
+         // given
+        Notify notify = testNotify("receiver", "test", NotifyType.NOTICE);
+        Notify savedNotify = notifyRepository.save(notify);
+
+        // when
+        Notify findNotify = notifyRepository.findByNotifyId(savedNotify.getNotifyId());
+
+        // then
+        assertThat(savedNotify.getNotifyId()).isEqualTo(findNotify.getNotifyId());
+        assertThat(savedNotify.getNotifyDetail()).isEqualTo(findNotify.getNotifyDetail());
+        assertThat(savedNotify.getNotifyType()).isEqualTo(findNotify.getNotifyType());
     }
 
     private Notify testNotify(String notifyReceiver, String notifyDetail, NotifyType notifyType) {
