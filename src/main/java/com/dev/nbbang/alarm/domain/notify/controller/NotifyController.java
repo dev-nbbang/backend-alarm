@@ -62,6 +62,6 @@ public class NotifyController {
                                                       @RequestParam(name = "notifyId") Long notifyId, @RequestParam(name = "size") int size) {
         log.info("[Notify Controller Search Notifies With Filter] : 필터링 된 회원의 알림 리스트 읽어오기");
 
-
+        return null;
     }
 }

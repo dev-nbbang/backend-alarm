@@ -17,16 +17,16 @@ public interface NotifyService {
     void deleteAllNotify(String notifyReceiver);
 
     // 알림 타입별 리스트 조회(필터링, 페이징)
-    List<NotifyDTO> searchNotifyList(NotifyType notifyType, String notifyReceiver, int size);
+    List<NotifyDTO> searchNotifyList(NotifyType notifyType, String notifyReceiver, Long notifyId, int size);
 
     // 안읽은 알림 타입별 리스트 조회 (필터링, 페이징)
-    List<NotifyDTO> searchUnreadNotifyList(NotifyType notifyType, String notifyReceiver, int size);
+    List<NotifyDTO> searchUnreadNotifyList(NotifyType notifyType, String notifyReceiver, Long notifyId, int size);
 
     // 알림 리스트 조회(페이징)
-    List<NotifyDTO> searchNotifyList(String notifyReceiver, int size);
+    List<NotifyDTO> searchNotifyList(String notifyReceiver, Long notifyId,  int size);
 
     // 안읽은 알림 리스트 조회 (페이징)
-    List<NotifyDTO> searchUnreadNotifyList(String notifyReceiver, int size);
+    List<NotifyDTO> searchUnreadNotifyList(String notifyReceiver, Long notifyId, int size);
 
     // 알림 저장
     NotifyDTO createNotify(Notify notify);

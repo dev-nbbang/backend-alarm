@@ -86,7 +86,7 @@ class NotifyRepositoryTest {
         List<Notify> savedNotifies = notifyRepository.saveAll(new ArrayList<>(Arrays.asList(notify1, notify2, notify3)));
 
         // when
-        Slice<Notify> findNotifies = notifyRepository.findNotifiesWithFilter(NotifyType.EVENT, "receiver", PageRequest.of(0, 2));
+        Slice<Notify> findNotifies = notifyRepository.findNotifiesWithFilter(NotifyType.EVENT, "receiver", 3L, PageRequest.of(0, 2));
 
         // then
         assertThat(findNotifies.getSize()).isEqualTo(2);
@@ -106,7 +106,7 @@ class NotifyRepositoryTest {
         List<Notify> savedNotifies = notifyRepository.saveAll(new ArrayList<>(Arrays.asList(notify1, notify2, notify3)));
 
         // when
-        Slice<Notify> findNotifies = notifyRepository.findNotifiesWithFilter(NotifyType.EVENT, "receiver", PageRequest.of(0, 2));
+        Slice<Notify> findNotifies = notifyRepository.findNotifiesWithFilter(NotifyType.EVENT, "receiver", 3L, PageRequest.of(0, 2));
 
         // then
         assertThat(findNotifies.getSize()).isEqualTo(2);
@@ -126,7 +126,7 @@ class NotifyRepositoryTest {
         List<Notify> savedNotifies = notifyRepository.saveAll(new ArrayList<>(Arrays.asList(notify1, notify2, notify3)));
 
         // when
-        Slice<Notify> findNotifies = notifyRepository.findUnreadNotifiesWithFilter(NotifyType.EVENT, "receiver", PageRequest.of(0, 3));
+        Slice<Notify> findNotifies = notifyRepository.findUnreadNotifiesWithFilter(NotifyType.EVENT, "receiver",3L, PageRequest.of(0, 3));
 
         // then
         assertThat(findNotifies.getSize()).isEqualTo(savedNotifies.size());
@@ -143,7 +143,7 @@ class NotifyRepositoryTest {
         List<Notify> savedNotifies = notifyRepository.saveAll(new ArrayList<>(Arrays.asList(notify1, notify2, notify3)));
 
         // when
-        Slice<Notify> findNotifies = notifyRepository.findUnreadNotifies("receiver", PageRequest.of(0, 3));
+        Slice<Notify> findNotifies = notifyRepository.findUnreadNotifies("receiver",3L, PageRequest.of(0, 3));
 
         // then
         assertThat(findNotifies.getSize()).isEqualTo(3);

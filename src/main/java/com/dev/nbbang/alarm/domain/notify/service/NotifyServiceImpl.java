@@ -36,6 +36,7 @@ public class NotifyServiceImpl implements NotifyService {
 
     /**
      * 특정 알림을 삭제한다.
+     *
      * @param notifyId 고유한 알림 아이디
      */
     @Override
@@ -74,9 +75,9 @@ public class NotifyServiceImpl implements NotifyService {
      * @return
      */
     @Override
-    public List<NotifyDTO> searchNotifyList(NotifyType notifyType, String notifyReceiver, int size) {
+    public List<NotifyDTO> searchNotifyList(NotifyType notifyType, String notifyReceiver, Long notifyId, int size) {
         // 1. 알림 조회하기
-        Slice<Notify> findNotifies = Optional.ofNullable(notifyRepository.findNotifiesWithFilter(notifyType, notifyReceiver, PageRequest.of(0, size)))
+        Slice<Notify> findNotifies = Optional.ofNullable(notifyRepository.findNotifiesWithFilter(notifyType, notifyReceiver, notifyId, PageRequest.of(0, size)))
                 .orElseThrow(() -> new FailSearchNotifiesException("알림 리스트 조회에 실패했습니다.", NbbangException.FAIL_SEARCH_NOTIFIES));
 
         return NotifyDTO.createList(findNotifies);
@@ -91,9 +92,9 @@ public class NotifyServiceImpl implements NotifyService {
      * @return
      */
     @Override
-    public List<NotifyDTO> searchUnreadNotifyList(NotifyType notifyType, String notifyReceiver, int size) {
+    public List<NotifyDTO> searchUnreadNotifyList(NotifyType notifyType, String notifyReceiver, Long notifyId, int size) {
         // 1. 읽지 않은 알림 리스트 조회하기
-        Slice<Notify> findNotifies = Optional.ofNullable(notifyRepository.findUnreadNotifiesWithFilter(notifyType, notifyReceiver, PageRequest.of(0, size)))
+        Slice<Notify> findNotifies = Optional.ofNullable(notifyRepository.findUnreadNotifiesWithFilter(notifyType, notifyReceiver, notifyId, PageRequest.of(0, size)))
                 .orElseThrow(() -> new FailSearchNotifiesException("알림 리스트 조회에 실패했습니다.", NbbangException.FAIL_SEARCH_NOTIFIES));
 
         return NotifyDTO.createList(findNotifies);
@@ -107,9 +108,9 @@ public class NotifyServiceImpl implements NotifyService {
      * @return
      */
     @Override
-    public List<NotifyDTO> searchNotifyList(String notifyReceiver, int size) {
+    public List<NotifyDTO> searchNotifyList(String notifyReceiver, Long notifyId, int size) {
         // 1. 알림 리스트 조회하기
-        Slice<Notify> findNotifies = Optional.ofNullable(notifyRepository.findNotifies(notifyReceiver, PageRequest.of(0, size)))
+        Slice<Notify> findNotifies = Optional.ofNullable(notifyRepository.findNotifies(notifyReceiver, notifyId, PageRequest.of(0, size)))
                 .orElseThrow(() -> new FailSearchNotifiesException("알림 리스트 조회에 실패했습니다.", NbbangException.FAIL_SEARCH_NOTIFIES));
 
         return NotifyDTO.createList(findNotifies);
@@ -123,9 +124,9 @@ public class NotifyServiceImpl implements NotifyService {
      * @return
      */
     @Override
-    public List<NotifyDTO> searchUnreadNotifyList(String notifyReceiver, int size) {
+    public List<NotifyDTO> searchUnreadNotifyList(String notifyReceiver, Long notifyId, int size) {
         // 1. 알림 리스트 조회하기
-        Slice<Notify> findNotifies = Optional.ofNullable(notifyRepository.findUnreadNotifies(notifyReceiver, PageRequest.of(0, size)))
+        Slice<Notify> findNotifies = Optional.ofNullable(notifyRepository.findUnreadNotifies(notifyReceiver, notifyId, PageRequest.of(0, size)))
                 .orElseThrow(() -> new FailSearchNotifiesException("알림 리스트 조회에 실패했습니다.", NbbangException.FAIL_SEARCH_NOTIFIES));
 
         return NotifyDTO.createList(findNotifies);

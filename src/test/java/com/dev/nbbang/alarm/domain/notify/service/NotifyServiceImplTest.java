@@ -53,7 +53,7 @@ class NotifyServiceImplTest {
     @DisplayName("알림 서비스 : 특정 알림 삭제 성공")
     void 특정_알림_삭제_성공() {
         // given
-        given(notifyRepository.findByNotifyId(anyLong())).willReturn(testNotify(1L,"receiver", "detail", NotifyType.QNA));
+        given(notifyRepository.findByNotifyId(anyLong())).willReturn(testNotify(1L, "receiver", "detail", NotifyType.QNA));
 
         // when
         notifyService.deleteNotify(1L);
@@ -86,10 +86,10 @@ class NotifyServiceImplTest {
     @DisplayName("알림 서비스 : 알림 타입별 리스트 조회 성공(필터링)")
     void 알림_타입별_리스트_조회_성공() {
         // given
-        given(notifyRepository.findNotifiesWithFilter(any(), anyString(), any())).willReturn(testNotifies());
+        given(notifyRepository.findNotifiesWithFilter(any(), anyString(), anyLong(), any())).willReturn(testNotifies());
 
         // when
-        List<NotifyDTO> findNotifies = notifyService.searchNotifyList(NotifyType.QNA, "receiver", 2);
+        List<NotifyDTO> findNotifies = notifyService.searchNotifyList(NotifyType.QNA, "receiver", 1000L, 2);
 
         // then
         assertThat(findNotifies.size()).isEqualTo(2);
@@ -102,20 +102,20 @@ class NotifyServiceImplTest {
     @DisplayName("알림 서비스 : 알림 타입별 리스트 조회 실패(필터링)")
     void 알림_타입별_리스트_조회_실패() {
         // given
-        given(notifyRepository.findNotifiesWithFilter(any(), anyString(), any())).willThrow(FailSearchNotifiesException.class);
+        given(notifyRepository.findNotifiesWithFilter(any(), anyString(), anyLong(), any())).willThrow(FailSearchNotifiesException.class);
 
         // then
-        assertThrows(FailSearchNotifiesException.class, () -> notifyService.searchNotifyList(NotifyType.QNA, "receiver", 2));
+        assertThrows(FailSearchNotifiesException.class, () -> notifyService.searchNotifyList(NotifyType.QNA, "receiver", 1000L, 2));
     }
 
     @Test
     @DisplayName("알림 서비스 : 안읽은 알림 타입별 리스트 조회 성공(필터링)")
     void 안읽은_알림_타입별_리스트_조회_성공() {
         // given
-        given(notifyRepository.findUnreadNotifiesWithFilter(any(), anyString(), any())).willReturn(testNotifies());
+        given(notifyRepository.findUnreadNotifiesWithFilter(any(), anyString(), anyLong(), any())).willReturn(testNotifies());
 
         // when
-        List<NotifyDTO> findNotifies = notifyService.searchUnreadNotifyList(NotifyType.QNA, "receiver", 2);
+        List<NotifyDTO> findNotifies = notifyService.searchUnreadNotifyList(NotifyType.QNA, "receiver", 1000L, 2);
 
         // then
         assertThat(findNotifies.size()).isEqualTo(2);
@@ -128,10 +128,10 @@ class NotifyServiceImplTest {
     @DisplayName("알림 서비스 : 안읽은 알림 타입별 리스트 조회 실패(필터링)")
     void 안읽은_알림_타입별_리스트_조회_실패() {
         // given
-        given(notifyRepository.findUnreadNotifiesWithFilter(any(), anyString(), any())).willThrow(FailSearchNotifiesException.class);
+        given(notifyRepository.findUnreadNotifiesWithFilter(any(), anyString(), anyLong(), any())).willThrow(FailSearchNotifiesException.class);
 
         // then
-        assertThrows(FailSearchNotifiesException.class, () -> notifyService.searchUnreadNotifyList(NotifyType.QNA, "receiver", 2));
+        assertThrows(FailSearchNotifiesException.class, () -> notifyService.searchUnreadNotifyList(NotifyType.QNA, "receiver", 1000L, 2));
 
     }
 
@@ -139,10 +139,10 @@ class NotifyServiceImplTest {
     @DisplayName("알림 서비스 : 알림 리스트 조회 성공")
     void 알림_리스트_조회_성공() {
         // given
-        given(notifyRepository.findNotifies(anyString(), any())).willReturn(testNotifiesNotFiltered());
+        given(notifyRepository.findNotifies(anyString(), anyLong(), any())).willReturn(testNotifiesNotFiltered());
 
         // when
-        List<NotifyDTO> findNotifies = notifyService.searchNotifyList("receiver", 3);
+        List<NotifyDTO> findNotifies = notifyService.searchNotifyList("receiver", 1000L, 3);
 
         // then
         assertThat(findNotifies.size()).isEqualTo(3);
@@ -154,20 +154,20 @@ class NotifyServiceImplTest {
     @DisplayName("알림 서비스 : 알림 리스트 조회 실패")
     void 알림_리스트_조회_실패() {
         // given
-        given(notifyRepository.findNotifies(anyString(), any())).willThrow(FailSearchNotifiesException.class);
+        given(notifyRepository.findNotifies(anyString(), anyLong(), any())).willThrow(FailSearchNotifiesException.class);
 
         // then
-        assertThrows(FailSearchNotifiesException.class, () -> notifyService.searchNotifyList("receiver", 2));
+        assertThrows(FailSearchNotifiesException.class, () -> notifyService.searchNotifyList("receiver", 1000L, 2));
     }
 
     @Test
     @DisplayName("알림 서비스 : 안읽은 알림 리스트 조회 성공")
     void 안읽은_알림_리스트_조회_성공() {
         // given
-        given(notifyRepository.findUnreadNotifies(anyString(), any())).willReturn(testNotifiesNotFiltered());
+        given(notifyRepository.findUnreadNotifies(anyString(), anyLong(), any())).willReturn(testNotifiesNotFiltered());
 
         // when
-        List<NotifyDTO> findNotifies = notifyService.searchUnreadNotifyList("receiver", 3);
+        List<NotifyDTO> findNotifies = notifyService.searchUnreadNotifyList("receiver", 1000L, 3);
 
         // then
         assertThat(findNotifies.size()).isEqualTo(3);
@@ -179,10 +179,10 @@ class NotifyServiceImplTest {
     @DisplayName("알림 서비스 : 안읽은 알림 리스트 조회 실패")
     void 안읽은_알림_리스트_조회_실패() {
         // given
-        given(notifyRepository.findUnreadNotifies(anyString(), any())).willThrow(FailSearchNotifiesException.class);
+        given(notifyRepository.findUnreadNotifies(anyString(), anyLong(), any())).willThrow(FailSearchNotifiesException.class);
 
         // then
-        assertThrows(FailSearchNotifiesException.class, () -> notifyService.searchUnreadNotifyList("receiver", 2));
+        assertThrows(FailSearchNotifiesException.class, () -> notifyService.searchUnreadNotifyList("receiver", 1000L, 2));
     }
 
     private Slice<Notify> testNotifies() {
