@@ -11,12 +11,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class NotifyServiceImpl implements NotifyService {
     private final NotifyRepository notifyRepository;
 
@@ -37,6 +39,7 @@ public class NotifyServiceImpl implements NotifyService {
      * @param notifyId 고유한 알림 아이디
      */
     @Override
+    @Transactional
     public void deleteNotify(Long notifyId) {
         // 1. 특정 알림 지우기 (알림이 있는지 먼저 판단)
         Optional.ofNullable(notifyRepository.findByNotifyId(notifyId))
@@ -56,6 +59,7 @@ public class NotifyServiceImpl implements NotifyService {
      * @param notifyReceiver
      */
     @Override
+    @Transactional
     public void deleteAllNotify(String notifyReceiver) {
         // 1. 알림 전체 삭제
         notifyRepository.deleteAllByNotifyReceiver(notifyReceiver);
