@@ -14,12 +14,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class NoticeServiceImpl implements NoticeService {
     private final NoticeRepository noticeRepository;
     private final NoticeImageRepository noticeImageRepository;
@@ -32,6 +34,7 @@ public class NoticeServiceImpl implements NoticeService {
      * @return 생성된 공지사항
      */
     @Override
+    @Transactional
     public NoticeDTO createNotice(Notice notice, List<String> imageUrls) {
         // 1. 공지사항 저장
         Notice savedNotice = Optional.of(noticeRepository.save(notice))
@@ -92,6 +95,7 @@ public class NoticeServiceImpl implements NoticeService {
      * @return 수정된 공지사항
      */
     @Override
+    @Transactional
     public NoticeDTO editNotice(Long noticeId, Notice notice, List<String> imageUrls) {
         // 1. 공지사항 조회
         Notice findNotice = Optional.ofNullable(noticeRepository.findByNoticeId(noticeId))
@@ -123,6 +127,7 @@ public class NoticeServiceImpl implements NoticeService {
      * @param noticeId 고유한 공지사항 아이디
      */
     @Override
+    @Transactional
     public void deleteNotice(Long noticeId) {
         Optional.ofNullable(noticeRepository.findByNoticeId(noticeId)).ifPresentOrElse(
              action -> {

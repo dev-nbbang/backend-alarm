@@ -4,6 +4,7 @@ import com.dev.nbbang.alarm.domain.notify.dto.NotifyDTO;
 import com.dev.nbbang.alarm.domain.notify.entity.Notify;
 import com.dev.nbbang.alarm.domain.notify.entity.NotifyType;
 import com.dev.nbbang.alarm.domain.notify.exception.FailSearchNotifiesException;
+import com.dev.nbbang.alarm.domain.notify.exception.NoCreateNotifyException;
 import com.dev.nbbang.alarm.domain.notify.exception.NoSuchNotifyException;
 import com.dev.nbbang.alarm.domain.notify.repository.NotifyRepository;
 import com.dev.nbbang.alarm.global.exception.NbbangException;
@@ -139,7 +140,12 @@ public class NotifyServiceImpl implements NotifyService {
      * @return
      */
     @Override
+    @Transactional
     public NotifyDTO createNotify(Notify notify) {
-        return null;
+        // 1. 알림 등록
+        Notify savedNotify = Optional.of(notifyRepository.save(notify))
+                .orElseThrow(() -> new NoCreateNotifyException("알림 등록에 실패했습니다.", NbbangException.NOT_CREATE_NOTIFY));
+
+        return NotifyDTO.create(savedNotify);
     }
 }
