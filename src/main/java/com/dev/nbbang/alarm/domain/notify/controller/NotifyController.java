@@ -5,6 +5,8 @@ import com.dev.nbbang.alarm.domain.notify.dto.response.UnreadNotifyCountResponse
 import com.dev.nbbang.alarm.domain.notify.entity.NotifyType;
 import com.dev.nbbang.alarm.domain.notify.service.NotifyService;
 import com.dev.nbbang.alarm.global.common.CommonSuccessResponse;
+import com.dev.nbbang.alarm.global.exception.NbbangException;
+import com.dev.nbbang.alarm.global.exception.NotAuthorizationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,7 +29,9 @@ public class NotifyController {
         // 회원 아이디 파싱
         String memberId = servletRequest.getHeader("X-Authorization-Id");
 
-        // 회원 아이디 파싱 안되는 경우 잘못된 접근
+        // 인증 회원 체크
+        if(memberId.length() < 1)
+            throw new NotAuthorizationException("잘못된 접근입니다.", NbbangException.BAD_REQUEST);
 
 
         // 안읽은 알림 개수 조회
@@ -40,7 +44,6 @@ public class NotifyController {
     public ResponseEntity<?> deleteNotify(@PathVariable(name = "notifyId") Long notifyId) {
         log.info("[Notify Controller Delete Notify] : 특정 알림 삭제하기");
 
-        //
         notifyService.deleteNotify(notifyId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -52,6 +55,10 @@ public class NotifyController {
 
         // 회원 아이디 파싱
         String memberId = servletRequest.getHeader("X-Authorization-Id");
+
+        // 인증 회원 체크
+        if(memberId.length() < 1)
+            throw new NotAuthorizationException("잘못된 접근입니다.", NbbangException.BAD_REQUEST);
 
         notifyService.deleteAllNotify(memberId);
 
@@ -66,6 +73,11 @@ public class NotifyController {
         // 회원 아이디 파싱
         String memberId = servletRequest.getHeader("X-Authorization-Id");
 
+        // 인증 회원 체크
+        if(memberId.length() < 1)
+            throw new NotAuthorizationException("잘못된 접근입니다.", NbbangException.BAD_REQUEST);
+
+
         List<NotifyDTO> findNotifies = notifyService.searchNotifyList(notifyType, memberId, notifyId, size);
 
         return ResponseEntity.ok(CommonSuccessResponse.response(true, findNotifies, "회원의 알림 리스트 조회에 성공했습니다."));
@@ -77,6 +89,11 @@ public class NotifyController {
 
         // 회원 아이디 파싱
         String memberId = servletRequest.getHeader("X-Authorization-Id");
+
+        // 인증 회원 체크
+        if(memberId.length() < 1)
+            throw new NotAuthorizationException("잘못된 접근입니다.", NbbangException.BAD_REQUEST);
+
 
         List<NotifyDTO> findNotifies = notifyService.searchNotifyList(memberId, notifyId, size);
 
@@ -90,6 +107,11 @@ public class NotifyController {
 
         String memberId = servletRequest.getHeader("X-Authorization-Id");
 
+        // 인증 회원 체크
+        if(memberId.length() < 1)
+            throw new NotAuthorizationException("잘못된 접근입니다.", NbbangException.BAD_REQUEST);
+
+
         List<NotifyDTO> findNotifies = notifyService.searchUnreadNotifyList(notifyType, memberId, notifyId, size);
 
         return ResponseEntity.ok(CommonSuccessResponse.response(true, findNotifies, "회원의 알림 리스트 조회에 성공했습니다."));
@@ -100,6 +122,11 @@ public class NotifyController {
         log.info("[Notify Controller Search Notifies] : 회원의 읽지 않은 알림 리스트 가져오기");
 
         String memberId = servletRequest.getHeader("X-Authorization-Id");
+
+        // 인증 회원 체크
+        if(memberId.length() < 1)
+            throw new NotAuthorizationException("잘못된 접근입니다.", NbbangException.BAD_REQUEST);
+
 
         List<NotifyDTO> findNotifies = notifyService.searchUnreadNotifyList(memberId, notifyId, size);
 
