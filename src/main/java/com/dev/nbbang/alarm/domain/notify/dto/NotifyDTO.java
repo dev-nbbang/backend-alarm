@@ -64,6 +64,17 @@ public class NotifyDTO {
         }
 
         return notifyList;
+    }
 
+    public static Notify toEntity(String notifySender, String notifyReceiver, String notifyDetail, NotifyType notifyType, Long notifyTypeId) {
+        return Notify.builder()
+                .notifySender(notifySender)
+                .notifyReceiver(notifyReceiver)
+                .notifyDetail(notifyDetail)
+                .notifyType(notifyType)
+                .notifyTypeId(notifyTypeId)
+                .notifyYmd(LocalDateTime.now())
+                .readYn("N")
+                .build();
     }
 }

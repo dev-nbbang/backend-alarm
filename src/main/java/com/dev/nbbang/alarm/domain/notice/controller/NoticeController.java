@@ -5,6 +5,9 @@ import com.dev.nbbang.alarm.domain.notice.dto.request.NoticeCreateRequest;
 import com.dev.nbbang.alarm.domain.notice.dto.response.NoticeListResponse;
 import com.dev.nbbang.alarm.domain.notice.dto.response.NoticeResponse;
 import com.dev.nbbang.alarm.domain.notice.service.NoticeService;
+import com.dev.nbbang.alarm.domain.notify.dto.NotifyDTO;
+import com.dev.nbbang.alarm.domain.notify.entity.NotifyType;
+import com.dev.nbbang.alarm.domain.notify.service.NotifyService;
 import com.dev.nbbang.alarm.global.common.CommonSuccessResponse;
 import com.dev.nbbang.alarm.global.exception.GrantAccessDeniedException;
 import com.dev.nbbang.alarm.global.exception.NbbangException;
@@ -23,7 +26,7 @@ import java.util.List;
 @RequestMapping(value = "/notice")
 public class NoticeController {
     private final NoticeService noticeService;
-
+    private final NotifyService notifyService;
     @PostMapping(value = "/new")
     public ResponseEntity<?> createNotice(@RequestBody NoticeCreateRequest request, HttpServletRequest servletRequest) {
         log.info("[Notice Controller] Create Notice : 공지 생성");
@@ -35,6 +38,11 @@ public class NoticeController {
 
         // 공지 생성
         NoticeDTO savedNotice = noticeService.createNotice(NoticeCreateRequest.toEntity(request), request.getImageUrls());
+
+        // 공지 생성 후 알림 등록
+        if(request.getRegisterNotify()) {
+            notifyService.createNotify(NotifyDTO.toEntity(memberId, "all", savedNotice.getTitle(), NotifyType.NOTICE, savedNotice.getNoticeId()));
+        }
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(CommonSuccessResponse.response(true, NoticeResponse.create(savedNotice), "공지사항 생성에 성공했습니다."));
@@ -74,6 +82,12 @@ public class NoticeController {
 
         // 공지사항 수정
         NoticeDTO updatedNotice = noticeService.editNotice(noticeId, NoticeCreateRequest.toEntity(request), request.getImageUrls());
+
+        // 공지사항 저장 후 알림 등록
+        // 공지 생성 후 알림 등록
+        if(request.getRegisterNotify()) {
+            notifyService.createNotify(NotifyDTO.toEntity(memberId, "all", updatedNotice.getTitle(), NotifyType.NOTICE, updatedNotice.getNoticeId()));
+        }
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(CommonSuccessResponse.response(true, NoticeResponse.create(updatedNotice), "공지사항 수정에 성공했습니다."));

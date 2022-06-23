@@ -10,7 +10,7 @@ public enum NbbangException {
     FAIL_SEARCH_NOTIFIES("BE202", "Fail Search Notifies"),
     NOT_CREATE_IMAGE("BE400", "Doesn't Create Image"),
     ACCESS_DENIED("BE401","Access Denied"),
-    BAD_REQUEST("BE402", "Doesn't Have Authoriation Id"),;
+    BAD_REQUEST("BE402", "Doesn't Have Authorization Id"),;
 
 
 
