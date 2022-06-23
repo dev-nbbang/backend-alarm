@@ -68,6 +68,7 @@ public class NotifyController {
     @GetMapping(value = "/{notifyType}")
     public ResponseEntity<?> searchNotifiesWithFilter(@PathVariable(name = "notifyType") NotifyType notifyType, HttpServletRequest servletRequest,
                                                       @RequestParam(name = "notifyId") Long notifyId, @RequestParam(name = "size") int size) {
+        log.info(String.valueOf(notifyId));
         log.info("[Notify Controller Search Notifies With Filter] : 필터링 된 회원의 알림 리스트 읽어오기");
 
         // 회원 아이디 파싱
@@ -79,6 +80,7 @@ public class NotifyController {
 
 
         List<NotifyDTO> findNotifies = notifyService.searchNotifyList(notifyType, memberId, notifyId, size);
+        // 사이즈에 따라 메세지 다르게
 
         return ResponseEntity.ok(CommonSuccessResponse.response(true, findNotifies, "회원의 알림 리스트 조회에 성공했습니다."));
     }
