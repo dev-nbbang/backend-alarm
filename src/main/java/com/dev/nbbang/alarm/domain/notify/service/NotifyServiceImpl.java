@@ -148,4 +148,22 @@ public class NotifyServiceImpl implements NotifyService {
 
         return NotifyDTO.create(savedNotify);
     }
+
+    /**
+     * 알림 안읽음 상태에서 읽음 상태로 변경하기
+     * @param notifyId
+     * @return
+     */
+    @Override
+    @Transactional
+    public NotifyDTO changeUnread(Long notifyId) {
+        // 1. 알림 아이디로 알림 찾기
+        Notify findNotify = Optional.ofNullable(notifyRepository.findByNotifyId(notifyId))
+                .orElseThrow(() -> new NoSuchNotifyException("등록된 알림이 없습니다.", NbbangException.NOT_FOUND_NOTIFY));
+
+        // 2. 알림을 읽은 상태로 변경한다.
+        findNotify.changeUnread();
+
+        return NotifyDTO.create(findNotify);
+    }
 }

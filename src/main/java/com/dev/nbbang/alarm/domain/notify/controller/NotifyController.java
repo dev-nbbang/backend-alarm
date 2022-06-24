@@ -1,6 +1,8 @@
 package com.dev.nbbang.alarm.domain.notify.controller;
 
 import com.dev.nbbang.alarm.domain.notify.dto.NotifyDTO;
+import com.dev.nbbang.alarm.domain.notify.dto.response.NotifyResponse;
+import com.dev.nbbang.alarm.domain.notify.dto.response.NotifyStatusChangeResponse;
 import com.dev.nbbang.alarm.domain.notify.dto.response.UnreadNotifyCountResponse;
 import com.dev.nbbang.alarm.domain.notify.entity.NotifyType;
 import com.dev.nbbang.alarm.domain.notify.service.NotifyService;
@@ -30,7 +32,7 @@ public class NotifyController {
         String memberId = servletRequest.getHeader("X-Authorization-Id");
 
         // 인증 회원 체크
-        if(memberId.length() < 1)
+        if (memberId.length() < 1)
             throw new NotAuthorizationException("잘못된 접근입니다.", NbbangException.BAD_REQUEST);
 
 
@@ -57,7 +59,7 @@ public class NotifyController {
         String memberId = servletRequest.getHeader("X-Authorization-Id");
 
         // 인증 회원 체크
-        if(memberId.length() < 1)
+        if (memberId.length() < 1)
             throw new NotAuthorizationException("잘못된 접근입니다.", NbbangException.BAD_REQUEST);
 
         notifyService.deleteAllNotify(memberId);
@@ -75,7 +77,7 @@ public class NotifyController {
         String memberId = servletRequest.getHeader("X-Authorization-Id");
 
         // 인증 회원 체크
-        if(memberId.length() < 1)
+        if (memberId.length() < 1)
             throw new NotAuthorizationException("잘못된 접근입니다.", NbbangException.BAD_REQUEST);
 
 
@@ -93,7 +95,7 @@ public class NotifyController {
         String memberId = servletRequest.getHeader("X-Authorization-Id");
 
         // 인증 회원 체크
-        if(memberId.length() < 1)
+        if (memberId.length() < 1)
             throw new NotAuthorizationException("잘못된 접근입니다.", NbbangException.BAD_REQUEST);
 
 
@@ -110,7 +112,7 @@ public class NotifyController {
         String memberId = servletRequest.getHeader("X-Authorization-Id");
 
         // 인증 회원 체크
-        if(memberId.length() < 1)
+        if (memberId.length() < 1)
             throw new NotAuthorizationException("잘못된 접근입니다.", NbbangException.BAD_REQUEST);
 
 
@@ -126,12 +128,22 @@ public class NotifyController {
         String memberId = servletRequest.getHeader("X-Authorization-Id");
 
         // 인증 회원 체크
-        if(memberId.length() < 1)
+        if (memberId.length() < 1)
             throw new NotAuthorizationException("잘못된 접근입니다.", NbbangException.BAD_REQUEST);
 
 
         List<NotifyDTO> findNotifies = notifyService.searchUnreadNotifyList(memberId, notifyId, size);
 
         return ResponseEntity.ok(CommonSuccessResponse.response(true, findNotifies, "회원의 알림 리스트 조회에 성공했습니다."));
+    }
+
+    @PutMapping(value = "/unread/change/{notifyId}")
+    public ResponseEntity<?> changeUnreadStatus(@PathVariable(name = "notifyId") Long notifyId) {
+        log.info("[Notify Controller Change Unread Status] : 읽지 않은 알림을 읽은 경우 상태를 변경");
+
+        NotifyDTO updatedNotify = notifyService.changeUnread(notifyId);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(CommonSuccessResponse.response(true, NotifyStatusChangeResponse.create(updatedNotify), "알림 읽음처리를 완료했습니다."));
     }
 }

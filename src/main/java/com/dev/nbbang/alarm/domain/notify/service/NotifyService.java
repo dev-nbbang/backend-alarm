@@ -30,4 +30,7 @@ public interface NotifyService {
 
     // 알림 저장
     NotifyDTO createNotify(Notify notify);
+
+    // 알림 안읽음 -> 읽음으로 변경
+    NotifyDTO changeUnread(Long notifyId);
 }

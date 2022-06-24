@@ -51,4 +51,8 @@ public class Notify {
         this.notifyType = notifyType;
         this.notifyTypeId = notifyTypeId;
     }
+
+    public void changeUnread() {
+        this.readYn = "N";
+    }
 }
