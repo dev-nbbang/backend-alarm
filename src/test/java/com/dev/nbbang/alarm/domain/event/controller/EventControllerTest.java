@@ -67,8 +67,6 @@ class EventControllerTest {
                 .andExpect(jsonPath("$.data.eventId").value(1))
                 .andExpect(jsonPath("$.data.title").value("title"))
                 .andExpect(jsonPath("$.data.eventDetail").value("detail"))
-                .andExpect(jsonPath("$.data.eventStart").value("2022-06-07"))
-                .andExpect(jsonPath("$.data.eventEnd").value("2022-06-14"))
                 .andExpect(jsonPath("$.data.eventImages.[0].imageId").value(1))
                 .andExpect(jsonPath("$.data.eventImages.[0].imageUrl").value("test1"))
                 .andExpect(jsonPath("$.data.eventImages.[1].imageId").value(2))
@@ -162,8 +160,6 @@ class EventControllerTest {
                 .andExpect(jsonPath("$.data.eventId").value(1))
                 .andExpect(jsonPath("$.data.title").value("title"))
                 .andExpect(jsonPath("$.data.eventDetail").value("detail"))
-                .andExpect(jsonPath("$.data.eventStart").value("2022-06-07"))
-                .andExpect(jsonPath("$.data.eventEnd").value("2022-06-14"))
                 .andExpect(jsonPath("$.data.eventImages.[0].imageUrl").value("test1"))
                 .andExpect(jsonPath("$.data.eventImages.[1].imageUrl").value("test2"))
                 .andReturn().getResponse();
@@ -212,8 +208,6 @@ class EventControllerTest {
                 .andExpect(jsonPath("$.data.eventId").value(1))
                 .andExpect(jsonPath("$.data.title").value("title"))
                 .andExpect(jsonPath("$.data.eventDetail").value("detail"))
-                .andExpect(jsonPath("$.data.eventStart").value("2022-06-07"))
-                .andExpect(jsonPath("$.data.eventEnd").value("2022-06-14"))
                 .andExpect(jsonPath("$.data.eventImages.[0].imageUrl").value("test1"))
                 .andExpect(jsonPath("$.data.eventImages.[1].imageUrl").value("test2"))
                 .andReturn().getResponse();

@@ -4,6 +4,7 @@ import com.dev.nbbang.alarm.domain.notify.dto.NotifyDTO;
 import com.dev.nbbang.alarm.domain.notify.entity.Notify;
 import com.dev.nbbang.alarm.domain.notify.entity.NotifyType;
 import com.dev.nbbang.alarm.domain.notify.exception.FailSearchNotifiesException;
+import com.dev.nbbang.alarm.domain.notify.exception.NoSuchFixedNotifyException;
 import com.dev.nbbang.alarm.domain.notify.exception.NoSuchNotifyException;
 import com.dev.nbbang.alarm.domain.notify.repository.NotifyRepository;
 import org.assertj.core.api.Assertions;
@@ -17,9 +18,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -231,6 +230,29 @@ class NotifyServiceImplTest {
         assertThrows(NoSuchNotifyException.class, () -> notifyService.deleteNotifyByManager(NotifyType.NOTICE, 1L));
     }
 
+    @Test
+    @DisplayName("알림 서비스 : 고정 알림 조회 성공")
+    void 고정_알림_조회_성공() {
+        // given
+        given(notifyRepository.findFixNotify(anyList(), any())).willReturn(testFixNotify());
+
+        // when
+        NotifyDTO fixedNotify = notifyService.searchFixNotify();
+
+        // then
+        assertThat(fixedNotify.getNotifyType()).isEqualTo(NotifyType.EVENT);
+        assertThat(fixedNotify.getNotifyTypeId()).isEqualTo(1000L);
+    }
+
+    @Test
+    @DisplayName("알림 서비스 :  고정 알림 조회 실패")
+    void 고정_알림_조회_실패() {
+        // given
+        given(notifyRepository.findFixNotify(anyList(), any())).willReturn(Collections.emptyList());
+
+        // then
+        assertThrows(NoSuchFixedNotifyException.class, () -> notifyService.searchFixNotify());
+    }
     private Slice<Notify> testNotifies() {
         Notify notify1 = testNotify(1L, "receiver", "detail", NotifyType.QNA);
         Notify notify2 = testNotify(2L, "receiver", "detail2", NotifyType.QNA);
@@ -257,5 +279,20 @@ class NotifyServiceImplTest {
                 .notifyYmd(LocalDateTime.now())
                 .readYn("N")
                 .build();
+    }
+
+    private List<Notify> testFixNotify() {
+        Notify fixedNotify = Notify.builder()
+                .notifyId(1L)
+                .notifySender("manager")
+                .notifyReceiver("all")
+                .notifyDetail("detail")
+                .notifyType(NotifyType.EVENT)
+                .notifyTypeId(1000L)
+                .notifyYmd(LocalDateTime.now())
+                .readYn("N")
+                .build();
+
+        return new ArrayList<>(Collections.singletonList(fixedNotify));
     }
 }

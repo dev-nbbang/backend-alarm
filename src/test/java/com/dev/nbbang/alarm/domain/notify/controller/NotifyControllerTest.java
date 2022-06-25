@@ -4,6 +4,7 @@ import com.dev.nbbang.alarm.domain.notify.dto.NotifyDTO;
 import com.dev.nbbang.alarm.domain.notify.entity.Notify;
 import com.dev.nbbang.alarm.domain.notify.entity.NotifyType;
 import com.dev.nbbang.alarm.domain.notify.exception.FailSearchNotifiesException;
+import com.dev.nbbang.alarm.domain.notify.exception.NoSuchFixedNotifyException;
 import com.dev.nbbang.alarm.domain.notify.exception.NoSuchNotifyException;
 import com.dev.nbbang.alarm.domain.notify.service.NotifyService;
 import com.dev.nbbang.alarm.global.exception.NbbangException;
@@ -372,6 +373,50 @@ class NotifyControllerTest {
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     }
+
+    @Test
+    @DisplayName("알림 컨트롤러 : 고정 알림 조회 성공")
+    void 고정_알림_조회_성공() throws Exception {
+        // given
+        String uri = "/notify/fix";
+        given(notifyService.searchFixNotify()).willReturn(testNotify(1L, "all", "fix", NotifyType.EVENT));
+
+        // when
+        MockHttpServletResponse response = mvc.perform(get(uri))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(true))
+                .andExpect(jsonPath("$.data.notifyId").value(1L))
+                .andExpect(jsonPath("$.data.notifyReceiver").value("all"))
+                .andExpect(jsonPath("$.data.notifyDetail").value("fix"))
+                .andExpect(jsonPath("$.data.notifyType").value("EVENT"))
+                .andExpect(jsonPath("$.data.notifyTypeId").value(1))
+                .andExpect(jsonPath("$.message").exists())
+                .andReturn().getResponse();
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("알림 컨트롤러 : 고정 알림 조회 실패")
+    void 고정_알림_조회_실패() throws Exception {
+        // given
+        String uri = "/notify/fix";
+        given(notifyService.searchFixNotify()).willThrow(new NoSuchFixedNotifyException("고정 알림 없음", NbbangException.NOT_FOUND_FIXED_NOTIFY));
+
+        // when
+        MockHttpServletResponse response = mvc.perform(get(uri))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(false))
+                .andExpect(jsonPath("$.message").exists())
+                .andReturn().getResponse();
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+    }
+
 
     private List<NotifyDTO> testNotifies() {
         NotifyDTO notify1 = testNotify(1L, "receiver", "detail", NotifyType.QNA);

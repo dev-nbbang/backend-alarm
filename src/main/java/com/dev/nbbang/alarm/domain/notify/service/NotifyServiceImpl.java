@@ -5,6 +5,7 @@ import com.dev.nbbang.alarm.domain.notify.entity.Notify;
 import com.dev.nbbang.alarm.domain.notify.entity.NotifyType;
 import com.dev.nbbang.alarm.domain.notify.exception.FailSearchNotifiesException;
 import com.dev.nbbang.alarm.domain.notify.exception.NoCreateNotifyException;
+import com.dev.nbbang.alarm.domain.notify.exception.NoSuchFixedNotifyException;
 import com.dev.nbbang.alarm.domain.notify.exception.NoSuchNotifyException;
 import com.dev.nbbang.alarm.domain.notify.repository.NotifyRepository;
 import com.dev.nbbang.alarm.global.exception.NbbangException;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -185,5 +187,21 @@ public class NotifyServiceImpl implements NotifyService {
                             notifyRepository.deleteNotifyByNotifyId(notify.getNotifyId());
                         }
                 );
+    }
+
+    /**
+     * 고정 알림 1건을 조회한다. (조건 최신 등록된 공지사항, 이벤트)
+     *
+     * @return 고정 알림 1건
+     */
+    @Override
+    public NotifyDTO searchFixNotify() {
+        // 1. 고정 알림 1건 조회
+        List<Notify> fixNotify = notifyRepository.findFixNotify(Arrays.asList(NotifyType.NOTICE, NotifyType.EVENT), PageRequest.of(0, 1));
+
+        if(fixNotify.size() < 1)
+            throw new NoSuchFixedNotifyException("등록된 고정 알림이 없습니다.", NbbangException.NOT_FOUND_FIXED_NOTIFY);
+
+        return NotifyDTO.create(fixNotify.get(0));
     }
 }

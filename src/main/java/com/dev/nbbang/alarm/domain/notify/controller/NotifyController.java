@@ -1,7 +1,7 @@
 package com.dev.nbbang.alarm.domain.notify.controller;
 
 import com.dev.nbbang.alarm.domain.notify.dto.NotifyDTO;
-import com.dev.nbbang.alarm.domain.notify.dto.response.NotifyResponse;
+import com.dev.nbbang.alarm.domain.notify.dto.response.FixedNotifyResponse;
 import com.dev.nbbang.alarm.domain.notify.dto.response.NotifyStatusChangeResponse;
 import com.dev.nbbang.alarm.domain.notify.dto.response.UnreadNotifyCountResponse;
 import com.dev.nbbang.alarm.domain.notify.entity.NotifyType;
@@ -145,5 +145,14 @@ public class NotifyController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(CommonSuccessResponse.response(true, NotifyStatusChangeResponse.create(updatedNotify), "알림 읽음처리를 완료했습니다."));
+    }
+
+    @GetMapping(value = "/fix")
+    public ResponseEntity<?> seachFixedNotify() {
+        log.info("[Notify Cotroller Search Fixed Notify] : 공지사항 혹은 이벤트 고정 알림 조회");
+
+        NotifyDTO fixedNotify = notifyService.searchFixNotify();
+
+        return ResponseEntity.ok(CommonSuccessResponse.response(true, FixedNotifyResponse.create(fixedNotify), "고정 알림 조회에 성공했습니다."));
     }
 }
