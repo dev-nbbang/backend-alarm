@@ -185,6 +185,30 @@ class NotifyServiceImplTest {
         assertThrows(FailSearchNotifiesException.class, () -> notifyService.searchUnreadNotifyList("receiver", 1000L, 2));
     }
 
+    @Test
+    @DisplayName("알림 서비스 : 알림 읽음 여부 처리 성공")
+    void 알림_읽음_처리_성공() {
+        // given
+        given(notifyRepository.findByNotifyId(anyLong())).willReturn(testNotify(1L, "receiver", "detail", NotifyType.NOTICE));
+
+        // when
+        NotifyDTO updatedNotify = notifyService.changeUnread(1L);
+
+        // then
+        assertThat(updatedNotify.getNotifyId()).isEqualTo(1L);
+        assertThat(updatedNotify.getReadYn()).isEqualTo("Y");
+    }
+
+    @Test
+    @DisplayName("알림 서비스 : 알림 읽음 여부 처리 실패")
+    void 알림_읽음_처리_실패() {
+        // given
+        given(notifyRepository.findByNotifyId(anyLong())).willThrow(NoSuchNotifyException.class);
+
+        // then
+        assertThrows(NoSuchNotifyException.class, () -> notifyService.changeUnread(1L));
+    }
+
     private Slice<Notify> testNotifies() {
         Notify notify1 = testNotify(1L, "receiver", "detail", NotifyType.QNA);
         Notify notify2 = testNotify(2L, "receiver", "detail2", NotifyType.QNA);

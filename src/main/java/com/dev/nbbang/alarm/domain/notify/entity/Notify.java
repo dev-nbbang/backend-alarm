@@ -53,6 +53,6 @@ public class Notify {
     }
 
     public void changeUnread() {
-        this.readYn = "N";
+        this.readYn = "Y";
     }
 }

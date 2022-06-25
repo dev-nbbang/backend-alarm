@@ -334,6 +334,45 @@ class NotifyControllerTest {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     }
 
+    @Test
+    @DisplayName("알림 컨트롤러 : 알림 읽음 처리 성공")
+    void 알림_읽음_처리_성공() throws Exception {
+        // given
+        String uri = "/notify/unread/change/1";
+        given(notifyService.changeUnread(anyLong())).willReturn(NotifyDTO.builder().notifyId(1L).readYn("Y").build());
+
+        // when
+        MockHttpServletResponse response = mvc.perform(put(uri))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.status").value(true))
+                .andExpect(jsonPath("$.data.readYn").value("Y"))
+                .andExpect(jsonPath("$.data.notifyId").value(1))
+                .andReturn().getResponse();
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    @DisplayName("알림 컨트롤러 : 알림 읽음 처리 실패")
+    void 알림_읽음_처리_실패() throws Exception {
+        // given
+        String uri = "/notify/unread/change/1";
+        given(notifyService.changeUnread(anyLong())).willThrow(new NoSuchNotifyException("알림 없음", NbbangException.NOT_FOUND_NOTIFY));
+
+        // when
+        MockHttpServletResponse response = mvc.perform(put(uri))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(false))
+                .andExpect(jsonPath("$.message").exists())
+                .andReturn().getResponse();
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+    }
+
     private List<NotifyDTO> testNotifies() {
         NotifyDTO notify1 = testNotify(1L, "receiver", "detail", NotifyType.QNA);
         NotifyDTO notify2 = testNotify(2L, "receiver", "detail2", NotifyType.QNA);
