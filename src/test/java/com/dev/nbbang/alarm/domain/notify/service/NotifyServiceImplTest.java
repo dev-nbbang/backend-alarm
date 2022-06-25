@@ -25,8 +25,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class NotifyServiceImplTest {
@@ -207,6 +206,29 @@ class NotifyServiceImplTest {
 
         // then
         assertThrows(NoSuchNotifyException.class, () -> notifyService.changeUnread(1L));
+    }
+
+    @Test
+    @DisplayName("알림 서비스 : 공지 혹으 이벤트 삭제 시 고정 알림 삭제 성공")
+    void 고정_알림_삭제_성공() {
+        // given
+        given(notifyRepository.findNotifyByType(any(), anyLong())).willReturn(testNotify(1L, "receiver", "detail", NotifyType.NOTICE));
+
+        // when
+        notifyService.deleteNotifyByManager(NotifyType.NOTICE, 1L);
+
+        // then
+        verify(notifyRepository, times(1)).deleteNotifyByNotifyId(anyLong());
+    }
+
+    @Test
+    @DisplayName("알림 서비스 : 공지 혹은 이벤트 삭제 시 공정 알림 삭제 실패")
+    void 고정_알림_삭제_실패() {
+        // given
+        given(notifyRepository.findNotifyByType(any(), anyLong())).willThrow(NoSuchNotifyException.class);
+
+        // then
+        assertThrows(NoSuchNotifyException.class, () -> notifyService.deleteNotifyByManager(NotifyType.NOTICE, 1L));
     }
 
     private Slice<Notify> testNotifies() {

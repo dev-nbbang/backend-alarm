@@ -58,7 +58,7 @@ public class NotifyServiceImpl implements NotifyService {
     /**
      * 회원 아이디로 온 전체 알림을 삭제한다.
      *
-     * @param notifyReceiver
+     * @param notifyReceiver 알람을 수신한 회원
      */
     @Override
     @Transactional
@@ -70,10 +70,10 @@ public class NotifyServiceImpl implements NotifyService {
     /**
      * 회원의 특별 타입의 전체 알림을 가져온다.
      *
-     * @param notifyType
-     * @param notifyReceiver
-     * @param size
-     * @return
+     * @param notifyType 알림 타입
+     * @param notifyReceiver 알림을 수신한 회원
+     * @param size 알림을 불러올 개수
+     * @return 회원이 수신한 알림 리스트
      */
     @Override
     public List<NotifyDTO> searchNotifyList(NotifyType notifyType, String notifyReceiver, Long notifyId, int size) {
@@ -87,10 +87,10 @@ public class NotifyServiceImpl implements NotifyService {
     /**
      * 회원의 읽지 않은 특별 타입의 전체 알림을 가져온다.
      *
-     * @param notifyType
-     * @param notifyReceiver
-     * @param size
-     * @return
+     * @param notifyType 알림 타입
+     * @param notifyReceiver 알림을 수신한 회원
+     * @param size 알림을 불러올 개수
+     * @return 회원이 수신한 알림 리스트 (읽지않음)
      */
     @Override
     public List<NotifyDTO> searchUnreadNotifyList(NotifyType notifyType, String notifyReceiver, Long notifyId, int size) {
@@ -104,9 +104,9 @@ public class NotifyServiceImpl implements NotifyService {
     /**
      * 회원의 전체 알림을 가져온다.
      *
-     * @param notifyReceiver
-     * @param size
-     * @return
+     * @param notifyReceiver 알림을 수신한 회원
+     * @param size 알림을 불렁로 개수
+     * @return 회원이 수신한 알림 리스트
      */
     @Override
     public List<NotifyDTO> searchNotifyList(String notifyReceiver, Long notifyId, int size) {
@@ -120,9 +120,9 @@ public class NotifyServiceImpl implements NotifyService {
     /**
      * 회원의 안읽은 전체 알림을 가져온다.
      *
-     * @param notifyReceiver
-     * @param size
-     * @return
+     * @param notifyReceiver 알림을 수신한 회원
+     * @param size 알림을 불러올 개수
+     * @return 회원이 수신한 알림 리스트
      */
     @Override
     public List<NotifyDTO> searchUnreadNotifyList(String notifyReceiver, Long notifyId, int size) {
@@ -136,8 +136,8 @@ public class NotifyServiceImpl implements NotifyService {
     /**
      * 알림을 생성한다.
      *
-     * @param notify
-     * @return
+     * @param notify 새로 생성할 알림 정보
+     * @return 생성된 알림
      */
     @Override
     @Transactional
@@ -151,8 +151,9 @@ public class NotifyServiceImpl implements NotifyService {
 
     /**
      * 알림 안읽음 상태에서 읽음 상태로 변경하기
-     * @param notifyId
-     * @return
+     *
+     * @param notifyId 고유한 할림 아이디
+     * @return 수정된 알림
      */
     @Override
     @Transactional
@@ -165,5 +166,24 @@ public class NotifyServiceImpl implements NotifyService {
         findNotify.changeUnread();
 
         return NotifyDTO.create(findNotify);
+    }
+
+    /**
+     * 공지사항 혹은 이벤트가 삭제되거나 고정 알람 등록 여부를 false한 경우 (수정 시)
+     *
+     * @param notifyType 알림 타입
+     * @param notifyTypeId 알림 타입 아이디
+     */
+    @Override
+    @Transactional
+    public void deleteNotifyByManager(NotifyType notifyType, Long notifyTypeId) {
+        // 1. 알림 타입과 알림 타입 아이디로 고정 알림 찾기
+        Optional.ofNullable(notifyRepository.findNotifyByType(notifyType, notifyTypeId))
+                .ifPresent(
+                        notify -> {
+                            //2. 등록된 알림 삭제
+                            notifyRepository.deleteNotifyByNotifyId(notify.getNotifyId());
+                        }
+                );
     }
 }

@@ -33,4 +33,7 @@ public interface NotifyService {
 
     // 알림 안읽음 -> 읽음으로 변경
     NotifyDTO changeUnread(Long notifyId);
+
+    // 공지사항 혹은 이벤트 공지 삭제 (공지,이벤트 공지 등록 여부 false 혹은 공지, 이벤트 삭제되는 경우 함께 삭제)
+    void deleteNotifyByManager(NotifyType notifyType, Long notifyTypeId);
 }

@@ -182,14 +182,60 @@ class NotifyRepositoryTest {
         assertThat(savedNotify.getNotifyType()).isEqualTo(findNotify.getNotifyType());
     }
 
+    @Test
+    @DisplayName("알림 레포지토리 : 알림 타입 아이디로 알림 조회")
+    void 알림_타입_정보로_알림_조회() {
+        // given
+        Notify notify = testNotify("receiver", "detail", NotifyType.NOTICE);
+        Notify savedNotify = notifyRepository.save(notify);
+
+        // when
+        Notify findNotify = notifyRepository.findNotifyByType(NotifyType.NOTICE, 1000L);
+
+        // then
+        assertThat(savedNotify.getNotifyId()).isEqualTo(findNotify.getNotifyId());
+        assertThat(savedNotify.getNotifyType()).isEqualTo(findNotify.getNotifyType());
+        assertThat(savedNotify.getNotifyTypeId()).isEqualTo(findNotify.getNotifyTypeId());
+    }
+
+    @Test
+    @DisplayName("알림 레포지토리 : 고정 알림 한개 조회")
+    void 고정_알림_조회() {
+        Notify laterNotify = testNotify("recevier", "detail", NotifyType.NOTICE, 1000L);
+        Notify curNotify = testNotify("receiver", "detail", NotifyType.EVENT);
+
+        Notify savedLaterNotify = notifyRepository.save(laterNotify);
+        Notify savedCurNotify = notifyRepository.save(curNotify);
+
+        // when
+        List<Notify> fixNotify = notifyRepository.findFixNotify(new ArrayList<>(Arrays.asList(NotifyType.NOTICE, NotifyType.EVENT)), PageRequest.of(0, 1));
+
+        // then
+        assertThat(fixNotify.get(0).getNotifyId()).isEqualTo(savedLaterNotify.getNotifyId());
+        assertThat(fixNotify.get(0).getNotifyTypeId()).isEqualTo(savedLaterNotify.getNotifyTypeId());
+        assertThat(fixNotify.get(0).getNotifyType()).isEqualTo(savedLaterNotify.getNotifyType());
+    }
+
     private Notify testNotify(String notifyReceiver, String notifyDetail, NotifyType notifyType) {
         return Notify.builder()
                 .notifySender("sender")
                 .notifyReceiver(notifyReceiver)
                 .notifyDetail(notifyDetail)
                 .notifyType(notifyType)
-                .notifyTypeId(1L)
+                .notifyTypeId(1000L)
                 .notifyYmd(LocalDateTime.now())
+                .readYn("N")
+                .build();
+    }
+
+    private Notify testNotify(String notifyReceiver, String notifyDetail, NotifyType notifyType, Long notifyTypeId) {
+        return Notify.builder()
+                .notifySender("sender")
+                .notifyReceiver(notifyReceiver)
+                .notifyDetail(notifyDetail)
+                .notifyType(notifyType)
+                .notifyTypeId(notifyTypeId)
+                .notifyYmd(LocalDateTime.now().plusWeeks(1))
                 .readYn("N")
                 .build();
     }

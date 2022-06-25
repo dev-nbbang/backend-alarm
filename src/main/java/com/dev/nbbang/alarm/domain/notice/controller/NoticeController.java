@@ -83,11 +83,15 @@ public class NoticeController {
         // 공지사항 수정
         NoticeDTO updatedNotice = noticeService.editNotice(noticeId, NoticeCreateRequest.toEntity(request), request.getImageUrls());
 
-        // 공지사항 저장 후 알림 등록
-        // 공지 생성 후 알림 등록
-        if(request.getRegisterNotify()) {
+        // 공지사항 수정 시 알림 등록 여부 true : 고정 알림 등록, false : 기존 고정 알림 삭제
+        // 기존 알림을 찾은 뒤 기존 알림 수정? (현홍이랑 고민해볼 필요있음)
+        if(request.getRegisterNotify())
             notifyService.createNotify(NotifyDTO.toEntity(memberId, "all", updatedNotice.getTitle(), NotifyType.NOTICE, updatedNotice.getNoticeId()));
-        }
+
+        // 공지사항 수정의 경우 알람 찾은 뒤 테이블에서 삭제 (이미 등록 안된 경우에는 예외가 터지는데..?) -> ifPresent로 해결'
+        else
+            notifyService.deleteNotifyByManager(NotifyType.NOTICE, updatedNotice.getNoticeId());
+
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(CommonSuccessResponse.response(true, NoticeResponse.create(updatedNotice), "공지사항 수정에 성공했습니다."));
@@ -104,6 +108,9 @@ public class NoticeController {
 
         // 공지사항 삭제
         noticeService.deleteNotice(noticeId);
+
+        // 삭제된 공지 사항 알림 삭제 (알림이 있는지 확인 후 삭제)
+        notifyService.deleteNotifyByManager(NotifyType.NOTICE, noticeId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
