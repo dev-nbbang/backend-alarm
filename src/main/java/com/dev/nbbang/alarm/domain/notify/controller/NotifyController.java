@@ -82,9 +82,13 @@ public class NotifyController {
 
 
         List<NotifyDTO> findNotifies = notifyService.searchNotifyList(notifyType, memberId, notifyId, size);
-        // 사이즈에 따라 메세지 다르게
+        String message = "회원의 알림 리스트 조회에 성공했습니다.";
 
-        return ResponseEntity.ok(CommonSuccessResponse.response(true, findNotifies, "회원의 알림 리스트 조회에 성공했습니다."));
+        // 사이즈에 따라 메세지 다르게
+        if(findNotifies.size() < size)
+            message = "모든 알림 리스트 조회에 성공했습니다.";
+
+        return ResponseEntity.ok(CommonSuccessResponse.response(true, findNotifies, message));
     }
 
     @GetMapping(value = "/all")
@@ -100,8 +104,13 @@ public class NotifyController {
 
 
         List<NotifyDTO> findNotifies = notifyService.searchNotifyList(memberId, notifyId, size);
+        String message = "회원의 알림 리스트 조회에 성공했습니다.";
 
-        return ResponseEntity.ok(CommonSuccessResponse.response(true, findNotifies, "회원의 알림 리스트 조회에 성공했습니다."));
+        // 사이즈에 따라 메세지 다르게
+        if(findNotifies.size() < size)
+            message = "모든 알림 리스트 조회에 성공했습니다.";
+
+        return ResponseEntity.ok(CommonSuccessResponse.response(true, findNotifies, message));
     }
 
     @GetMapping(value = "/unread/{notifyType}")
@@ -117,8 +126,13 @@ public class NotifyController {
 
 
         List<NotifyDTO> findNotifies = notifyService.searchUnreadNotifyList(notifyType, memberId, notifyId, size);
+        String message = "회원의 알림 리스트 조회에 성공했습니다.";
 
-        return ResponseEntity.ok(CommonSuccessResponse.response(true, findNotifies, "회원의 알림 리스트 조회에 성공했습니다."));
+        // 사이즈에 따라 메세지 다르게
+        if(findNotifies.size() < size)
+            message = "모든 알림 리스트 조회에 성공했습니다.";
+
+        return ResponseEntity.ok(CommonSuccessResponse.response(true, findNotifies, message));
     }
 
     @GetMapping(value = "/unread/all")
@@ -133,8 +147,13 @@ public class NotifyController {
 
 
         List<NotifyDTO> findNotifies = notifyService.searchUnreadNotifyList(memberId, notifyId, size);
+        String message = "회원의 알림 리스트 조회에 성공했습니다.";
 
-        return ResponseEntity.ok(CommonSuccessResponse.response(true, findNotifies, "회원의 알림 리스트 조회에 성공했습니다."));
+        // 사이즈에 따라 메세지 다르게
+        if(findNotifies.size() < size)
+            message = "모든 알림 리스트 조회에 성공했습니다.";
+
+        return ResponseEntity.ok(CommonSuccessResponse.response(true, findNotifies, message));
     }
 
     @PutMapping(value = "/unread/change/{notifyId}")
