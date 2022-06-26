@@ -7,6 +7,9 @@ import com.dev.nbbang.alarm.domain.event.entity.EventImage;
 import com.dev.nbbang.alarm.domain.event.exception.NoCreateEventException;
 import com.dev.nbbang.alarm.domain.event.exception.NoSuchEventException;
 import com.dev.nbbang.alarm.domain.event.service.EventService;
+import com.dev.nbbang.alarm.domain.notify.dto.NotifyDTO;
+import com.dev.nbbang.alarm.domain.notify.entity.NotifyType;
+import com.dev.nbbang.alarm.domain.notify.service.NotifyService;
 import com.dev.nbbang.alarm.global.exception.NbbangException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -40,6 +43,9 @@ class EventControllerTest {
     @MockBean
     private EventService eventService;
 
+    @MockBean
+    private NotifyService notifyService;
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -61,8 +67,6 @@ class EventControllerTest {
                 .andExpect(jsonPath("$.data.eventId").value(1))
                 .andExpect(jsonPath("$.data.title").value("title"))
                 .andExpect(jsonPath("$.data.eventDetail").value("detail"))
-                .andExpect(jsonPath("$.data.eventStart").value("2022-06-07"))
-                .andExpect(jsonPath("$.data.eventEnd").value("2022-06-14"))
                 .andExpect(jsonPath("$.data.eventImages.[0].imageId").value(1))
                 .andExpect(jsonPath("$.data.eventImages.[0].imageUrl").value("test1"))
                 .andExpect(jsonPath("$.data.eventImages.[1].imageId").value(2))
@@ -143,6 +147,7 @@ class EventControllerTest {
         // given
         String uri = "/event/new";
         given(eventService.createEvent(any(), anyList())).willReturn(testEvent(1L, "title"));
+        given(notifyService.createNotify(any())).willReturn(testNotify(1L, "receiver", "detail", NotifyType.EVENT));
 
         // when
         MockHttpServletResponse response = mvc.perform(post(uri)
@@ -155,8 +160,6 @@ class EventControllerTest {
                 .andExpect(jsonPath("$.data.eventId").value(1))
                 .andExpect(jsonPath("$.data.title").value("title"))
                 .andExpect(jsonPath("$.data.eventDetail").value("detail"))
-                .andExpect(jsonPath("$.data.eventStart").value("2022-06-07"))
-                .andExpect(jsonPath("$.data.eventEnd").value("2022-06-14"))
                 .andExpect(jsonPath("$.data.eventImages.[0].imageUrl").value("test1"))
                 .andExpect(jsonPath("$.data.eventImages.[1].imageUrl").value("test2"))
                 .andReturn().getResponse();
@@ -192,6 +195,7 @@ class EventControllerTest {
         // given
         String uri = "/event/1";
         given(eventService.editEvent(anyLong(), any(), anyList())).willReturn(testEvent(1L, "title"));
+        given(notifyService.createNotify(any())).willReturn(testNotify(1L, "receiver", "detail", NotifyType.EVENT));
 
         // when
         MockHttpServletResponse response = mvc.perform(put(uri)
@@ -204,8 +208,6 @@ class EventControllerTest {
                 .andExpect(jsonPath("$.data.eventId").value(1))
                 .andExpect(jsonPath("$.data.title").value("title"))
                 .andExpect(jsonPath("$.data.eventDetail").value("detail"))
-                .andExpect(jsonPath("$.data.eventStart").value("2022-06-07"))
-                .andExpect(jsonPath("$.data.eventEnd").value("2022-06-14"))
                 .andExpect(jsonPath("$.data.eventImages.[0].imageUrl").value("test1"))
                 .andExpect(jsonPath("$.data.eventImages.[1].imageUrl").value("test2"))
                 .andReturn().getResponse();
@@ -315,11 +317,24 @@ class EventControllerTest {
 
     private static EventCreateRequest testEventCreate() {
         return EventCreateRequest.builder()
+                .registerNotify(true)
                 .title("title")
                 .eventDetail("detail")
                 .eventStart(LocalDate.now())
                 .eventEnd(LocalDate.now().plusWeeks(1))
                 .imageUrls(Arrays.asList("test1", "test2"))
+                .build();
+    }
+    private NotifyDTO testNotify(Long notifyId, String notifyReceiver, String notifyDetail, NotifyType notifyType) {
+        return NotifyDTO.builder()
+                .notifyId(notifyId)
+                .notifySender("sender")
+                .notifyReceiver(notifyReceiver)
+                .notifyDetail(notifyDetail)
+                .notifyType(notifyType)
+                .notifyTypeId(1L)
+                .notifyYmd(LocalDateTime.now())
+                .readYn("N")
                 .build();
     }
 }

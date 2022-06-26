@@ -13,6 +13,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class EventCreateRequest {
+    private Boolean registerNotify; // 알림 등록 여부
     private String title;
     private String eventDetail;
     private LocalDate eventStart;
@@ -20,7 +21,8 @@ public class EventCreateRequest {
     private List<String> imageUrls;
 
     @Builder
-    public EventCreateRequest(String title, String eventDetail, LocalDate eventStart, LocalDate eventEnd, List<String> imageUrls) {
+    public EventCreateRequest(Boolean registerNotify, String title, String eventDetail, LocalDate eventStart, LocalDate eventEnd, List<String> imageUrls) {
+        this.registerNotify = registerNotify;
         this.title = title;
         this.eventDetail = eventDetail;
         this.eventStart = eventStart;

@@ -5,6 +5,9 @@ import com.dev.nbbang.alarm.domain.event.dto.request.EventCreateRequest;
 import com.dev.nbbang.alarm.domain.event.dto.response.EventListResponse;
 import com.dev.nbbang.alarm.domain.event.dto.response.EventResponse;
 import com.dev.nbbang.alarm.domain.event.service.EventService;
+import com.dev.nbbang.alarm.domain.notify.dto.NotifyDTO;
+import com.dev.nbbang.alarm.domain.notify.entity.NotifyType;
+import com.dev.nbbang.alarm.domain.notify.service.NotifyService;
 import com.dev.nbbang.alarm.global.common.CommonSuccessResponse;
 import com.dev.nbbang.alarm.global.exception.GrantAccessDeniedException;
 import com.dev.nbbang.alarm.global.exception.NbbangException;
@@ -23,6 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EventController {
     private final EventService eventService;
+    private final NotifyService notifyService;
 
     @GetMapping(value = "/{eventId}")
     public ResponseEntity<?> searchEvent(@PathVariable(name = "eventId") Long eventId) {
@@ -56,6 +60,11 @@ public class EventController {
         // 이벤트 및 이미지 저장
         EventDTO savedEvent = eventService.createEvent(EventCreateRequest.toEntity(request), request.getImageUrls());
 
+        // 이벤트 저장 후 필요시 알람 등록
+        if(request.getRegisterNotify()) {
+            notifyService.createNotify(NotifyDTO.toEntity(memberId, "all", savedEvent.getTitle(), NotifyType.EVENT, savedEvent.getEventId()));
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(CommonSuccessResponse.response(true, EventResponse.create(savedEvent), "이벤트가 등록에 성공했습니다."));
     }
@@ -72,6 +81,13 @@ public class EventController {
         // 이벤트 수정
         EventDTO updatedEvent = eventService.editEvent(eventId, EventCreateRequest.toEntity(request), request.getImageUrls());
 
+        // 이벤트 수정 후 알림 등록 여부 true : 기존 알림 찾아서 수정? false : 기존 알림 있는지 확인 후 삭제
+        if(request.getRegisterNotify())
+            notifyService.createNotify(NotifyDTO.toEntity(memberId, "all", updatedEvent.getTitle(), NotifyType.EVENT, updatedEvent.getEventId()));
+        // 기존 고정 알림이 있는 경우 알림 삭제
+        else
+            notifyService.deleteNotifyByManager(NotifyType.EVENT, updatedEvent.getEventId());
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(CommonSuccessResponse.response(true, EventResponse.create(updatedEvent), "이벤트가 수정에 성공했습니다."));
     }
@@ -87,6 +103,9 @@ public class EventController {
 
         // 이벤트 삭제
         eventService.deleteEvent(eventId);
+
+        // 이벤트 삭제 시 등록된 고정 알림 있는 경우 함께 삭제
+        notifyService.deleteNotifyByManager(NotifyType.EVENT, eventId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
