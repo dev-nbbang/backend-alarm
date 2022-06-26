@@ -32,4 +32,12 @@ public class NbbangExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(CommonResponse.response(false, "Bad Request"));
     }
+
+    @ExceptionHandler(NotAuthorizationException.class)
+    public ResponseEntity<CommonResponse> handleNotAuthorzationException(NotAuthorizationException e) {
+        log.warn("Nbbang Exception Code : " + e.getErrorCode());
+        log.warn("Nbbang Exception message : " + e.getMessage());
+
+        return ResponseEntity.status(e.getHttpStatus()).body(CommonResponse.response(false, e.getMessage()));
+    }
 }

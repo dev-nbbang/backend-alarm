@@ -8,6 +8,9 @@ import com.dev.nbbang.alarm.domain.notice.entity.NoticeImage;
 import com.dev.nbbang.alarm.domain.notice.exception.NoCreateNoticeException;
 import com.dev.nbbang.alarm.domain.notice.exception.NoSuchNoticeException;
 import com.dev.nbbang.alarm.domain.notice.service.NoticeService;
+import com.dev.nbbang.alarm.domain.notify.dto.NotifyDTO;
+import com.dev.nbbang.alarm.domain.notify.entity.NotifyType;
+import com.dev.nbbang.alarm.domain.notify.service.NotifyService;
 import com.dev.nbbang.alarm.global.exception.NbbangException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,6 +49,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class NoticeControllerTest {
     @MockBean
     private NoticeService noticeService;
+
+    @MockBean
+    private NotifyService notifyService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -146,6 +152,7 @@ class NoticeControllerTest {
     void 공지_생성_성공() throws Exception {
         // given
         String uri = "/notice/new";
+        given(notifyService.createNotify(any())).willReturn(testNotify(1L, "receiver", "detail", NotifyType.NOTICE));
         given(noticeService.createNotice(any(), anyList())).willReturn(testNotice(1L, "title", testImages()));
 
         // when
@@ -194,6 +201,7 @@ class NoticeControllerTest {
     void 공지_수정_성공() throws Exception {
         // given
         String uri = "/notice/1";
+        given(notifyService.createNotify(any())).willReturn(testNotify(1L, "receiver", "detail", NotifyType.NOTICE));
         given(noticeService.editNotice(anyLong(), any(), anyList())).willReturn(testNotice(1L, "update", testImages()));
 
         // when
@@ -307,9 +315,22 @@ class NoticeControllerTest {
 
     private NoticeCreateRequest createRequest() {
         return NoticeCreateRequest.builder()
+                .registerNotify(true)
                 .title("title")
                 .noticeDetail("detail")
                 .imageUrls(new ArrayList<>(Arrays.asList("test1", "test2")))
+                .build();
+    }
+    private NotifyDTO testNotify(Long notifyId, String notifyReceiver, String notifyDetail, NotifyType notifyType) {
+        return NotifyDTO.builder()
+                .notifyId(notifyId)
+                .notifySender("sender")
+                .notifyReceiver(notifyReceiver)
+                .notifyDetail(notifyDetail)
+                .notifyType(notifyType)
+                .notifyTypeId(1L)
+                .notifyYmd(LocalDateTime.now())
+                .readYn("N")
                 .build();
     }
 }

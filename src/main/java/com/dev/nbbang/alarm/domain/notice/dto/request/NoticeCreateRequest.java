@@ -11,12 +11,14 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class NoticeCreateRequest {
+    private Boolean registerNotify; // 알림 테이블 저장 여부 판단
     private String title;
     private String noticeDetail;
     private List<String> imageUrls;
 
     @Builder
-    public NoticeCreateRequest(String title, String noticeDetail, List<String> imageUrls) {
+    public NoticeCreateRequest(Boolean registerNotify, String title, String noticeDetail, List<String> imageUrls) {
+        this.registerNotify = registerNotify;
         this.title = title;
         this.noticeDetail = noticeDetail;
         this.imageUrls = imageUrls;
