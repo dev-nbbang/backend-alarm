@@ -52,6 +52,7 @@ public class Notify {
         this.notifyTypeId = notifyTypeId;
     }
 
+    // 읽음 처리
     public void changeUnread() {
         this.readYn = "Y";
     }
