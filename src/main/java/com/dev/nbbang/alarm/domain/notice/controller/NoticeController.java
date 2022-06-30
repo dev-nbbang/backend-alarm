@@ -25,8 +25,9 @@ import java.util.List;
 @Slf4j
 @RequestMapping(value = "/notice")
 public class NoticeController {
-    private final NoticeService noticeService;
-    private final NotifyService notifyService;
+    private final NoticeService noticeService; // 공지
+    private final NotifyService notifyService; // 알림
+
     @PostMapping(value = "/new")
     public ResponseEntity<?> createNotice(@RequestBody NoticeCreateRequest request, HttpServletRequest servletRequest) {
         log.info("[Notice Controller] Create Notice : 공지 생성");
