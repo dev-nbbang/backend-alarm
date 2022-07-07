@@ -1,5 +1,6 @@
 package com.dev.nbbang.alarm.domain.event.entity;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "EVENT_IMAGE")
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class EventImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,21 +1,19 @@
 package com.dev.nbbang.alarm.domain.event.repository;
 
 import com.dev.nbbang.alarm.domain.event.entity.Event;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 
-import java.awt.print.Pageable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -29,7 +27,7 @@ class EventRepositoryTest {
         // given
         Event savedEvent = eventRepository.save(testEventBuilder());
 
-        // when \
+        // when
         Event findEvent = eventRepository.findByEventId(savedEvent.getEventId());
 
         // then
@@ -75,7 +73,7 @@ class EventRepositoryTest {
         eventRepository.save(testEventBuilder());
 
         // when
-        Slice<Event> findEventList = eventRepository.findEventByEventIdLessThanOrderByEventIdDesc(10000L, PageRequest.of(0, 2));
+        Slice<Event> findEventList = eventRepository.findEventList(10000L, PageRequest.of(0, 2));
 
         // then
         assertThat(findEventList.getSize()).isEqualTo(2);
