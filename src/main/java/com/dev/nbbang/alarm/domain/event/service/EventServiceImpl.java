@@ -4,7 +4,6 @@ import com.dev.nbbang.alarm.domain.event.dto.EventDTO;
 import com.dev.nbbang.alarm.domain.event.dto.EventImageDTO;
 import com.dev.nbbang.alarm.domain.event.entity.Event;
 import com.dev.nbbang.alarm.domain.event.entity.EventImage;
-import com.dev.nbbang.alarm.domain.event.exception.FailDeleteEventImagesException;
 import com.dev.nbbang.alarm.domain.event.exception.NoCreateEventException;
 import com.dev.nbbang.alarm.domain.event.exception.NoSuchEventException;
 import com.dev.nbbang.alarm.domain.event.repository.EventImageRepository;
@@ -136,7 +135,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventDTO> searchEventList(Long eventId, int size) {
         // 1. 이벤트 리스트 조회
-        Slice<Event> findEvents = eventRepository.findEventByEventIdLessThanOrderByEventIdDesc(eventId, PageRequest.of(0, size));
+        Slice<Event> findEvents = eventRepository.findEventList(eventId, PageRequest.of(0, size));
         if(findEvents.getSize() == 0) {
             throw new NoSuchEventException("더 이상 조회할 이벤트가 없습니다.", NbbangException.NOT_FOUND_EVENT);
         }

@@ -4,5 +4,6 @@ public enum NotifyType {
     PARTY,
     QNA,
     NOTICE,
-    EVENT
+    EVENT,
+    BILLING
 }

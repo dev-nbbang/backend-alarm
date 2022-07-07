@@ -7,7 +7,6 @@ import com.dev.nbbang.alarm.domain.event.exception.NoCreateEventException;
 import com.dev.nbbang.alarm.domain.event.exception.NoSuchEventException;
 import com.dev.nbbang.alarm.domain.event.repository.EventImageRepository;
 import com.dev.nbbang.alarm.domain.event.repository.EventRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -148,7 +147,7 @@ class EventServiceTest {
     @DisplayName("이벤트 서비스 : 이벤트 리스트 전체 조회 성공")
     void 이벤트_리스트_전체_조회_성공() {
         // given
-        given(eventRepository.findEventByEventIdLessThanOrderByEventIdDesc(anyLong(), any())).willReturn(sliceEvent());
+        given(eventRepository.findEventList(anyLong(), any())).willReturn(sliceEvent());
 
         // when
         List<EventDTO> findEvents = eventService.searchEventList(1000L, 2);
@@ -160,7 +159,7 @@ class EventServiceTest {
     @DisplayName("이벤트 서비스 : 이벤트 리스트 전체 조회 실패")
     void 이벤트_전체_리스트_조회_실패() {
         // given
-        given(eventRepository.findEventByEventIdLessThanOrderByEventIdDesc(anyLong(), any())).willThrow(NoSuchEventException.class);
+        given(eventRepository.findEventList(anyLong(), any())).willThrow(NoSuchEventException.class);
 
         // when
         assertThrows(NoSuchEventException.class, () -> eventService.searchEventList(1000L, 2));
