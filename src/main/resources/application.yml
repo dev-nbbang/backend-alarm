@@ -17,7 +17,6 @@ spring:
     password: nbbang-dev!@#
   main:
     allow-bean-definition-overriding: true
-
 # Actuator
 # acutator
 management:
@@ -34,7 +33,6 @@ encrypt:
     password: config-access
     alias: nbbang-config-key
     location: file:///Users/zayson/Desktop/Zayson Project/엔빵/nbbang-config.jks
-
 
 
 #  jpa:
