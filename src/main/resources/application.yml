@@ -1,37 +1,69 @@
 server:
   port: 9300
+  servlet:
+    context-path: /nbbang-alarm
+# 공통
 spring:
   application:
-    name: nbbang-alarm
+    name: nbbang-alarm, common
   profiles:
-    active: local
-  jpa:
-    hibernate:
-      ddl-auto: none
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-    database-platform: mysql
-    properties:
-      hibernate:
-        format_sql: true
-        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-        storage_engine: innodb
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://129.154.222.27:3306/nbbang_alarm?useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
-    username: root
+    active: prod
+  config:
+    import: optional:configserver:http://129.154.222.27:8197
+  rabbitmq:
+    host: 129.154.222.27
+    port: 5672
+    username: nbbang
     password: nbbang-dev!@#
-## hibernate log (공통)
-logging:
-  level:
-    org:
-      hibernate:
-        SQL: debug
-        type:
-          descriptor:
-            sql: trace
+  main:
+    allow-bean-definition-overriding: true
+# Actuator
+# acutator
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - "busrefresh"
+          - "refresh"
+# 키스토어 복호화
+encrypt:
+  key-store:
+    location: file:///home/ubuntu/nbbang/key/nbbang-config.jks
+    password: config-access
+    alias: nbbang-config-key
+#    location: file:///Users/zayson/Desktop/Zayson Project/엔빵/nbbang-config.jks
 
-## kafka
-kafka:
-  host: 129.154.222.27
-  port: 9092
+
+#  jpa:
+#    hibernate:
+#      ddl-auto: none
+#      naming:
+#        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+#    database-platform: mysql
+#    properties:
+#      hibernate:
+#        format_sql: true
+#        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+#        storage_engine: innodb
+
+ # alarm만
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://129.154.222.27:3306/nbbang_alarm?useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+#    username: root
+#    password: nbbang-dev!@#
+## hibernate log (공통)
+#logging:
+#  level:
+#    org:
+#      hibernate:
+#        SQL: debug
+#        type:
+#          descriptor:
+#            sql: trace
+#
+### kafka (공통)
+#kafka:
+#  host: 129.154.222.27
+#  port: 9092

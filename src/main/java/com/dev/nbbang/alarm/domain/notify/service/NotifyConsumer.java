@@ -61,22 +61,4 @@ public class NotifyConsumer {
             log.error("실패한 메세지 : {}", response.toString());
         }
     }
-
-    // 이거 notify로 통합 필요
-    @Transactional
-    @KafkaListener(topics = "matching-info-notify", groupId = "alarm-group-id")
-    public void matchingFailMessage(String message, Acknowledgment ack) throws JsonProcessingException {
-        MatchingResponse response = objectMapper.readValue(message, MatchingResponse.class);
-
-        try {
-            // 받은 메세지를 이용해 회원 아이디의 알림 전체 삭제
-            notifyRepository.save(MatchingResponse.toEntity(response));
-
-            // 로직 수행 성공하면 커밋하라고 응답하기.
-            ack.acknowledge();
-        } catch (FailDeleteNotifiesException e) {
-            log.info(response.getNotifySender() +"님의 알림 받기 실패했습니다.");
-        }
-    }
-
 }
