@@ -23,7 +23,6 @@
 .idea
 .idea/*.xml
 *.iml
-.yml
 out
 gen
 build
@@ -39,3 +38,6 @@ hs_err_pid*
 
 # avoid Gradle
 !gradle-wrapper.jar
+
+# application.yml
+application.yml
