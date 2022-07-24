@@ -1,3 +1,4 @@
+/*
 package com.dev.nbbang.alarm.global.config;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -58,3 +59,4 @@ public class KafkaConsumerConfig {
         return kafkaListenerContainerFactory;
     }
 }
+*/
