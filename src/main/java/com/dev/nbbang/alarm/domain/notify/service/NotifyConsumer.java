@@ -16,10 +16,10 @@ public class NotifyConsumer {
     private final NotifyRepository notifyRepository;
 
     private final String NOTIFY_QUEUE = "notify.queue";
-    private final String MEMBER_LEAVE_QUEUE = "member.leave.queue";
+    private final String MEMBER_LEAVE_ALARM_QUEUE = "member.leave.alarm.queue";
 
     @Transactional
-    @RabbitListener(queues = {MEMBER_LEAVE_QUEUE})
+    @RabbitListener(queues = {MEMBER_LEAVE_ALARM_QUEUE})
     public void receiveMemberLeaveMessage(MemberLeaveResponse response) {
         log.info("[MEMBER LEAVE QUEUE] : 회원 탈퇴 이벤트 수신");
         log.info("[MEMBER LEAVE QUEUE] message : {}", response.toString());
@@ -40,7 +40,7 @@ public class NotifyConsumer {
     public void receiveNotifyMessage(NotifyResponse response) {
         log.info("[NOTIFY QUEUE] 알림 등록 메세지 수신");
         log.info("[NOTIFY QUEUE] message : {}", response.toString());
-
+        
         try {
             notifyRepository.save(NotifyResponse.toEntity(response));
             log.info("[NOTITFY QUEUE] 알림 등록 성공");
